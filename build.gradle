@@ -47,7 +47,9 @@ project(":desktop") {
         implementation project(":core")
         api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        
+
+        // https://mvnrepository.com/artifact/org.json/json
+        implementation group: 'org.json', name: 'json', version: '20090211'
     }
 }
 
