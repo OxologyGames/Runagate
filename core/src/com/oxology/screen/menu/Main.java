@@ -1,7 +1,6 @@
 package com.oxology.screen.menu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -13,14 +12,11 @@ public class Main extends Template {
     private SpriteBatch batch;
 
     public Main() {
-        camera = new OrthographicCamera(1920, 1080);
-        camera.translate(1920/2f, 1080/2f);
-        camera.update();
-
-        BitmapFont font = new BitmapFont(Gdx.files.internal("font/bahnschriftLight.fnt"));
+        super(2560, 1440);
+        BitmapFont font = new BitmapFont(Gdx.files.internal("font/bahnschrift.fnt"));
         font.setColor(1, 1, 1, 1);
-        font.getData().scaleX = .1f;
-        font.getData().scaleY = .1f;
+        font.getData().scaleX = .3f;
+        font.getData().scaleY = .3f;
         playButton = new Button(100, 300, "Play", font, new Button.Action() {
             @Override
             public void onAction() {
@@ -44,6 +40,8 @@ public class Main extends Template {
         batch.begin();
         playButton.draw(batch);
         batch.end();
+
+        System.out.println(camera.viewportHeight);
 
         //System.out.println("drawn");
 

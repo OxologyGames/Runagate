@@ -7,12 +7,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Template implements Screen {
     protected OrthographicCamera camera;
     protected SpriteBatch batch;
+    protected int viewportWidth, viewportHeight;
 
-    public Template() {
-        camera = new OrthographicCamera(640, 360);
-        camera.translate(640/2f, 360/2f);
-        camera.update();
-
+    public Template(int viewportWidth, int viewportHeight) {
+        updateViewport(viewportWidth, viewportHeight);
         batch = new SpriteBatch();
     }
 
@@ -28,9 +26,7 @@ public class Template implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        camera = new OrthographicCamera(640, 360);
-        camera.translate(640/2f, 360/2f);
-        camera.update();
+        updateViewport(viewportWidth, viewportHeight);
     }
 
     @Override
@@ -51,5 +47,21 @@ public class Template implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
+    }
+
+    public void updateViewport(int viewportWidth, int viewportHeight) {
+        this.viewportWidth = viewportWidth;
+        this.viewportHeight = viewportHeight;
+        this.camera = new OrthographicCamera(viewportWidth, viewportHeight);
+        this.camera.translate(viewportWidth/2f, viewportHeight/2f);
+        this.camera.update();
+    }
+
+    public int getX() {
+        return 0;
+    }
+
+    public int getY() {
+        return 0;
     }
 }

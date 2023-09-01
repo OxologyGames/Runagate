@@ -1,9 +1,9 @@
 package com.oxology;
 
-import com.badlogic.gdx.Game;
+import com.oxology.screen.Game;
 import com.oxology.screen.menu.Main;
 
-public class Runagate extends Game {
+public class Runagate extends com.badlogic.gdx.Game {
 	
 	@Override
 	public void create () {
