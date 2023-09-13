@@ -1,5 +1,6 @@
 package com.oxology.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,14 +16,10 @@ public class Template implements Screen {
     }
 
     @Override
-    public void show() {
-
-    }
+    public void show() {}
 
     @Override
-    public void render(float delta) {
-
-    }
+    public void render(float delta) {}
 
     @Override
     public void resize(int width, int height) {
@@ -30,19 +27,13 @@ public class Template implements Screen {
     }
 
     @Override
-    public void pause() {
-
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() {}
 
     @Override
     public void dispose() {
@@ -58,10 +49,12 @@ public class Template implements Screen {
     }
 
     public int getX() {
-        return 0;
+        float prop = (float) Gdx.graphics.getBackBufferWidth() / viewportWidth;
+        return (int) (Gdx.input.getX() / prop);
     }
 
     public int getY() {
-        return 0;
+        float prop = (float) Gdx.graphics.getBackBufferHeight() / viewportHeight;
+        return (int) (Gdx.input.getY() / prop);
     }
 }
