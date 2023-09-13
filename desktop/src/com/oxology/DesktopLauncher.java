@@ -79,6 +79,6 @@ public class DesktopLauncher {
 
 		System.out.println(values.values());
 
-		new Lwjgl3Application(new Runagate(), config);
+		new Lwjgl3Application(new Runagate(values), config);
 	}
 }
