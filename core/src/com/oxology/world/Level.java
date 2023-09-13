@@ -6,4 +6,8 @@ public class Level {
     public Level() {
         tiles = new Tile[40][30];
     }
+
+    public Level(Tile[][] tiles) {
+        this.tiles = tiles;
+    }
 }
