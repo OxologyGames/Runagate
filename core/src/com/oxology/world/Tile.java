@@ -1,4 +1,6 @@
 package com.oxology.world;
 
-public class Tile {
+public enum Tile {
+    AIR,
+    WALL
 }
