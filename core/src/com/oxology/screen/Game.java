@@ -10,8 +10,8 @@ public class Game extends Template {
     private SpriteBatch levelBatch;
     private Player player;
 
-    public Game() {
-        super(1920, 1080);
+    public Game(int viewportWidth, int viewportHeight) {
+        super(viewportWidth, viewportHeight);
 
         levelCamera = new OrthographicCamera(320, 180);
         levelCamera.translate(320/2f, 180/2f);
