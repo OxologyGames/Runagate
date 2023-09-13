@@ -41,10 +41,6 @@ public class Main extends Template {
         playButton.draw(batch);
         batch.end();
 
-        System.out.println(camera.viewportHeight);
-
-        //System.out.println("drawn");
-
         playButton.update();
     }
 }
