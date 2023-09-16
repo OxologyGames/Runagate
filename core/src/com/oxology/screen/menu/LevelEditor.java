@@ -2,10 +2,14 @@ package com.oxology.screen.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.oxology.menu.Button;
 import com.oxology.screen.Template;
+import com.oxology.world.Level;
 import com.oxology.world.Tile;
 
 public class LevelEditor extends Template {
@@ -19,11 +23,13 @@ public class LevelEditor extends Template {
     private Texture cursor;
     private int cursorX, cursorY;
 
+    private Button saveBtn;
+
     public LevelEditor(int viewportWidth, int viewportHeight) {
         super(viewportWidth, viewportHeight);
 
-        levelCamera = new OrthographicCamera(352, 198);
-        levelCamera.translate(352/2f, 198/2f);
+        levelCamera = new OrthographicCamera(384, 216);
+        levelCamera.translate(384/2f, 216/2f);
         levelCamera.update();
 
         levelBatch = new SpriteBatch();
@@ -41,26 +47,46 @@ public class LevelEditor extends Template {
         this.wallTexture = new Texture("level/wall.png");
 
         this.cursor = new Texture("level/cursor.png");
+
+        BitmapFont font = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
+        font.setColor(Color.WHITE);
+        font.getData().scaleX = .09f;
+        font.getData().scaleY = .09f;
+        this.saveBtn = new Button(332, 189, "Save", font, new Button.Action() {
+            @Override
+            public void onAction() {
+                saveLevel();
+            }
+        }, new Button.Action() {
+            @Override
+            public void onAction() {
+
+            }
+        });
     }
 
     @Override
     public void render(float deltaTime) {
-        levelCamera.update();
-        levelBatch.setProjectionMatrix(levelCamera.combined);
-
+        update(deltaTime);
         levelBatch.begin();
-        levelBatch.draw(border, 15, 8);
+        levelBatch.draw(border, 8, 17);
 
         for(int i = 0; i < 40; i++) {
             for(int j = 0; j < 30; j++) {
                 Texture texture = airTexture;
                 if(tiles[i][j] == Tile.WALL) texture = wallTexture;
-                levelBatch.draw(texture, 16+i*8, 9+j*6);
+                levelBatch.draw(texture, 9+i*8, 18+j*6);
             }
         }
 
-        levelBatch.draw(cursor, 16+cursorX*8, 9+cursorY*6);
+        levelBatch.draw(cursor, 9+cursorX*8, 18+cursorY*6);
+        saveBtn.draw(levelBatch);
         levelBatch.end();
+    }
+
+    private void update(float deltaTime) {
+        levelCamera.update();
+        levelBatch.setProjectionMatrix(levelCamera.combined);
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             cursorY++;
@@ -80,5 +106,9 @@ public class LevelEditor extends Template {
             else
                 tiles[cursorX][cursorY] = Tile.AIR;
         }
+    }
+
+    private void saveLevel() {
+        Level level = new Level(tiles);
     }
 }
