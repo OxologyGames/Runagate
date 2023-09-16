@@ -1,6 +1,7 @@
 package com.oxology.menu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +13,7 @@ public class Button {
     private BitmapFont font;
     private Action click;
     private Action hover;
+    private Texture button, buttonClick;
 
     public interface Action {
         void onAction();
@@ -24,6 +26,8 @@ public class Button {
         this.font = font;
         this.click = click;
         this.hover = hover;
+        this.button = new Texture("button.png");
+        this.buttonClick = new Texture("buttonClick.png");
 
         GlyphLayout layout = new GlyphLayout(font, text);
         this.width = layout.width;
@@ -31,7 +35,8 @@ public class Button {
     }
 
     public void draw(SpriteBatch batch) {
-        font.draw(batch, text, x, y);
+        batch.draw(button, x, y);
+        font.draw(batch, text, x+25-width/2, y-1);
     }
 
     public void update() {
