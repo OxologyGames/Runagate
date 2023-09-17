@@ -1,10 +1,7 @@
 package com.oxology;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.oxology.screen.Game;
-import com.oxology.screen.menu.LevelEditor;
+import com.oxology.screen.menu.WorldEditor;
 
 import java.util.Map;
 
@@ -18,7 +15,7 @@ public class Runagate extends com.badlogic.gdx.Game {
 
 	@Override
 	public void create () {
-		this.setScreen(new LevelEditor(resX, resY));
+		this.setScreen(new WorldEditor(resX, resY));
 	}
 
 	@Override
