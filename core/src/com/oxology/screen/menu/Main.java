@@ -22,12 +22,7 @@ public class Main extends Template {
             public void onAction() {
                 //System.out.println("clicked");
             }
-        }, new Button.Action() {
-            @Override
-            public void onAction() {
-                //System.out.println("hover");
-            }
-        });
+        }, this);
 
         batch = new SpriteBatch();
     }
