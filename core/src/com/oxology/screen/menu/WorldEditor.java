@@ -10,12 +10,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.menu.Button;
 import com.oxology.screen.Template;
 import com.oxology.world.Level;
-import com.oxology.world.Tile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WorldEditor extends Template {
     private OrthographicCamera levelCamera;
     private SpriteBatch levelBatch;
-    private Tile[][] tiles;
+    private List<Level> levels;
 
     private Texture border;
 
@@ -34,12 +36,7 @@ public class WorldEditor extends Template {
 
         levelBatch = new SpriteBatch();
 
-        this.tiles = new Tile[40][30];
-        for(int i = 0; i < 40; i++) {
-            for(int j = 0; j < 30; j++) {
-                tiles[i][j] = Tile.AIR;
-            }
-        }
+        this.levels = new ArrayList<>();
 
         this.border = new Texture("level/levelBorder.png");
 
@@ -66,13 +63,6 @@ public class WorldEditor extends Template {
         levelBatch.begin();
         levelBatch.draw(border, 8, 17);
 
-        for(int i = 0; i < 40; i++) {
-            for(int j = 0; j < 30; j++) {
-                Texture texture = airTexture;
-                if(tiles[i][j] == Tile.WALL) texture = wallTexture;
-                levelBatch.draw(texture, 9+i*8, 18+j*6);
-            }
-        }
 
         levelBatch.draw(cursor, 9+cursorX*8, 18+cursorY*6);
         saveBtn.draw(levelBatch);
@@ -98,26 +88,13 @@ public class WorldEditor extends Template {
         if(getX() > 8 && getX() < 328 && getY() > 17 && getY() < 197) {
             cursorX = (getX()-9)/8;
             cursorY = (getY()-18)/6;
-
-            if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-                    tiles[cursorX][cursorY] = Tile.WALL;
-            }
         }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            if(tiles[cursorX][cursorY] == Tile.AIR)
-                tiles[cursorX][cursorY] = Tile.WALL;
-            else
-                tiles[cursorX][cursorY] = Tile.AIR;
-        }
-
-
 
         saveBtn.update();
     }
 
     private void saveLevel() {
-        Level level = new Level(tiles);
+        //Level level = new Level(tiles);
     }
 
     @Override
