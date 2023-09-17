@@ -57,12 +57,7 @@ public class LevelEditor extends Template {
             public void onAction() {
                 saveLevel();
             }
-        }, new Button.Action() {
-            @Override
-            public void onAction() {
-
-            }
-        });
+        }, this);
     }
 
     @Override
@@ -88,16 +83,25 @@ public class LevelEditor extends Template {
         levelCamera.update();
         levelBatch.setProjectionMatrix(levelCamera.combined);
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.UP) && cursorY < 29) {
             cursorY++;
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && cursorY > 0) {
             cursorY--;
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && cursorX < 39) {
             cursorX++;
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && cursorX > 0) {
             cursorX--;
+        }
+
+        if(getX() > 8 && getX() < 328 && getY() > 17 && getY() < 197) {
+            cursorX = (getX()-9)/8;
+            cursorY = (getY()-18)/6;
+
+            if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+                    tiles[cursorX][cursorY] = Tile.WALL;
+            }
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
@@ -106,9 +110,25 @@ public class LevelEditor extends Template {
             else
                 tiles[cursorX][cursorY] = Tile.AIR;
         }
+
+
+
+        saveBtn.update();
     }
 
     private void saveLevel() {
         Level level = new Level(tiles);
+    }
+
+    @Override
+    public int getX() {
+        float prop = (float) Gdx.graphics.getWidth() / 384;
+        return (int) (Gdx.input.getX() / prop);
+    }
+
+    @Override
+    public int getY() {
+        float prop = (float) Gdx.graphics.getHeight() / 216;
+        return (int) ((Gdx.graphics.getHeight()-Gdx.input.getY()) / prop);
     }
 }
