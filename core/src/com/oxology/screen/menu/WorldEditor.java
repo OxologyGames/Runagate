@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.oxology.Runagate;
 import com.oxology.menu.Button;
 import com.oxology.screen.Template;
 import com.oxology.world.Level;
+import com.oxology.world.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,14 +23,14 @@ public class WorldEditor extends Template {
 
     private Texture border;
 
-    private Texture airTexture, wallTexture;
     private Texture cursor;
+    private Texture addCursor;
     private int cursorX, cursorY;
 
     private Button saveBtn;
 
-    public WorldEditor(int viewportWidth, int viewportHeight) {
-        super(viewportWidth, viewportHeight);
+    public WorldEditor(Runagate game) {
+        super(game);
 
         levelCamera = new OrthographicCamera(384, 216);
         levelCamera.translate(384/2f, 216/2f);
@@ -40,10 +42,11 @@ public class WorldEditor extends Template {
 
         this.border = new Texture("level/levelBorder.png");
 
-        this.airTexture = new Texture("level/air.png");
-        this.wallTexture = new Texture("level/wall.png");
-
         this.cursor = new Texture("level/levelBorder2.png");
+        this.addCursor = new Texture("level/levelBorderAdd.png");
+
+        this.cursorX = 3;
+        this.cursorY = 3;
 
         BitmapFont font = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
         font.setColor(Color.WHITE);
@@ -52,7 +55,7 @@ public class WorldEditor extends Template {
         this.saveBtn = new Button(332, 189, "Save", font, new Button.Action() {
             @Override
             public void onAction() {
-                saveLevel();
+                //saveLevel();
             }
         }, this);
     }
@@ -63,8 +66,15 @@ public class WorldEditor extends Template {
         levelBatch.begin();
         levelBatch.draw(border, 8, 17);
 
+        if(getLevel(cursorX, cursorY) != null)
+            levelBatch.draw(cursor, 9+cursorX*48, 18+cursorY*27);
+        else
+            levelBatch.draw(addCursor, 9+cursorX*48, 18+cursorY*27);
 
-        levelBatch.draw(cursor, 9+cursorX*8, 18+cursorY*6);
+        for(Level level : levels) {
+            levelBatch.draw(cursor/*level.getSnippet()*/, 9+level.getX()*48, 18+level.getY()*27, 48, 27);
+        }
+
         saveBtn.draw(levelBatch);
         levelBatch.end();
     }
@@ -86,15 +96,50 @@ public class WorldEditor extends Template {
         }
 
         if(getX() > 8 && getX() < 328 && getY() > 17 && getY() < 197) {
-            cursorX = (getX()-9)/8;
-            cursorY = (getY()-18)/6;
+            cursorX = (getX()-9)/48;
+            cursorY = (getY()-18)/27;
+
+            if(Gdx.input.isTouched())
+                goToLevel();
+        }
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            goToLevel();
         }
 
         saveBtn.update();
     }
 
-    private void saveLevel() {
-        //Level level = new Level(tiles);
+    public void saveLevel(Level level) {
+        for(int i = 0; i < levels.size(); i++) {
+            if(level.getX() == levels.get(i).getX() && level.getY() == levels.get(i).getY())
+                levels.set(i, level);
+        }
+    }
+
+    private void goToLevel() {
+        Level level = getLevel(cursorX, cursorY);
+        if(level == null)
+            level = new Level(cursorX, cursorY);
+
+        this.levels.add(level);
+
+        game.setScreen(new LevelEditor(this, game, level));
+    }
+
+    public void goToLevel(int x, int y) {
+        cursorX = x;
+        cursorY = y;
+
+        goToLevel();
+    }
+
+    private Level getLevel(int x, int y) {
+        for(Level level : levels) {
+            if(level.getX() == x && level.getY() == y) return level;
+        }
+
+        return null;
     }
 
     @Override

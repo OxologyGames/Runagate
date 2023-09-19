@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.oxology.Runagate;
 import com.oxology.menu.Button;
 import com.oxology.screen.Template;
 
@@ -11,8 +12,8 @@ public class Main extends Template {
     private Button playButton;
     private SpriteBatch batch;
 
-    public Main() {
-        super(2560, 1440);
+    public Main(Runagate game) {
+        super(game);
         BitmapFont font = new BitmapFont(Gdx.files.internal("font/bahnschrift.fnt"));
         font.setColor(1, 1, 1, 1);
         font.getData().scaleX = .3f;

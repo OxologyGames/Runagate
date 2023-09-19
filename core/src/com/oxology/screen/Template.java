@@ -4,15 +4,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.oxology.Runagate;
 
 public class Template implements Screen {
     protected OrthographicCamera camera;
     protected SpriteBatch batch;
     protected int viewportWidth, viewportHeight;
+    protected Runagate game;
 
-    public Template(int viewportWidth, int viewportHeight) {
-        updateViewport(viewportWidth, viewportHeight);
+    public Template(Runagate game) {
+        updateViewport(game.getResX(), game.getResY());
         batch = new SpriteBatch();
+        this.game = game;
     }
 
     @Override
