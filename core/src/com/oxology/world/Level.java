@@ -7,14 +7,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Level {
+public class Level implements Serializable {
+
+
     private Tile[][] tiles;
     private int x, y;
-    private Texture snippet;
-    private List<Chain> chains;
+    private transient Texture snippet;
+    private List<GameObject> gameObjects;
 
     public Level(int x, int y) {
         tiles = new Tile[40][30];
@@ -28,7 +31,7 @@ public class Level {
         }
 
         snippet = new Texture("level/levelBorder2.png");
-        chains = new ArrayList<>();
+        gameObjects = new ArrayList<>();
     }
 
     public void generateSnippet() {
@@ -65,8 +68,8 @@ public class Level {
         this.tiles = tiles;
     }
 
-    public List<Chain> getChains() {
-        return chains;
+    public List<GameObject> getGameObjects() {
+        return gameObjects;
     }
 
     public Tile[][] getTiles() {

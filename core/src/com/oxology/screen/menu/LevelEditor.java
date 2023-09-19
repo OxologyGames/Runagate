@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
 import com.oxology.menu.Button;
 import com.oxology.screen.Template;
-import com.oxology.world.Chain;
+import com.oxology.world.GameObject;
 import com.oxology.world.Level;
 import com.oxology.world.Tile;
 
@@ -104,8 +104,8 @@ public class LevelEditor extends Template {
         backBtn.draw(levelBatch);
         modeBtn.draw(levelBatch);
 
-        for(Chain chain : level.getChains()) {
-            levelBatch.draw(chainTexture, 9+chain.getX()*8, 18+chain.getY()*6);
+        for(GameObject gameObject : level.getGameObjects()) {
+            levelBatch.draw(chainTexture, 9+gameObject.getX()*8, 18+gameObject.getY()*6);
         }
 
         levelBatch.end();
@@ -162,15 +162,15 @@ public class LevelEditor extends Template {
 
             if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && mode == 2) {
                 int chainIndex = -1;
-                for(int i = 0; i < level.getChains().size(); i++) {
-                    if(level.getChains().get(i).getX() == cursorX && level.getChains().get(i).getY() == cursorY)
+                for(int i = 0; i < level.getGameObjects().size(); i++) {
+                    if(level.getGameObjects().get(i).getX() == cursorX && level.getGameObjects().get(i).getY() == cursorY)
                         chainIndex = i;
                 }
 
                 if(chainIndex != -1) {
-                    level.getChains().remove(chainIndex);
+                    level.getGameObjects().remove(chainIndex);
                 } else {
-                    level.getChains().add(new Chain(cursorX, cursorY));
+                    level.getGameObjects().add(new GameObject(cursorX, cursorY, GameObject.ObjectType.CHAIN));
                 }
             }
         }

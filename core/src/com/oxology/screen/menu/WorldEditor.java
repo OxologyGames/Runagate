@@ -11,10 +11,13 @@ import com.oxology.Runagate;
 import com.oxology.menu.Button;
 import com.oxology.screen.Template;
 import com.oxology.world.Level;
-import com.oxology.world.Tile;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class WorldEditor extends Template {
     private OrthographicCamera levelCamera;
@@ -55,7 +58,7 @@ public class WorldEditor extends Template {
         this.saveBtn = new Button(332, 189, "Save", font, new Button.Action() {
             @Override
             public void onAction() {
-                //saveLevel();
+                saveWorld();
             }
         }, this);
     }
@@ -114,6 +117,27 @@ public class WorldEditor extends Template {
         for(int i = 0; i < levels.size(); i++) {
             if(level.getX() == levels.get(i).getX() && level.getY() == levels.get(i).getY())
                 levels.set(i, level);
+        }
+    }
+
+    private void saveWorld() {
+        File gameDataFolder = new File(System.getenv("APPDATA"), "Runagate");
+        if(!gameDataFolder.exists()) gameDataFolder.mkdirs();
+
+        File worldsFolder = new File(gameDataFolder, "worlds");
+        if(!worldsFolder.exists()) gameDataFolder.mkdirs();
+
+        File world = new File(worldsFolder, UUID.randomUUID().toString());
+        if(!world.exists()) world.mkdirs();
+
+        for(Level level : levels) {
+            try {
+                FileOutputStream fileOutputStream = new FileOutputStream(world + File.separator + level.getX() + "_" + level.getY() + ".dat");
+                ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
+                outputStream.writeObject(level);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

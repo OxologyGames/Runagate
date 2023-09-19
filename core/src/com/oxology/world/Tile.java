@@ -1,6 +1,8 @@
 package com.oxology.world;
 
-public enum Tile {
+import java.io.Serializable;
+
+public enum Tile implements Serializable {
     AIR,
     WALL
 }
