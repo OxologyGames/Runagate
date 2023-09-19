@@ -1,6 +1,7 @@
 package com.oxology.menu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -53,11 +54,27 @@ public class Button {
         if((screenTemplate.getX() >= x && screenTemplate.getX() < x + button.getWidth()) && (screenTemplate.getY() >= y && screenTemplate.getY() < y + button.getHeight())) {
             hover = true;
 
-            if(Gdx.input.isTouched()) {
+            if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
                 click.onAction();
             }
         } else {
             hover = false;
         }
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public BitmapFont getFont() {
+        return font;
     }
 }
