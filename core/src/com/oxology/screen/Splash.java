@@ -1,6 +1,7 @@
 package com.oxology.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.oxology.Runagate;
 import com.oxology.screen.menu.WorldEditor;
@@ -38,8 +39,8 @@ public class Splash extends Template {
                 }
                 break;
             case 1:
-                visibility += deltaTime*0.8f;
-                if(timeElapsed > 1) {
+                visibility += deltaTime*0.5f;
+                if(timeElapsed > 2f) {
                     stage++;
                     timeElapsed = 0;
                 }
@@ -51,8 +52,8 @@ public class Splash extends Template {
                 }
                 break;
             case 3:
-                visibility -= deltaTime*0.8f;
-                if(timeElapsed > 1) {
+                visibility -= deltaTime*0.5f;
+                if(timeElapsed > 2f) {
                     stage++;
                     timeElapsed = 0;
                 }
@@ -62,6 +63,9 @@ public class Splash extends Template {
                 break;
         }
         batch.setColor(visibility, visibility, visibility, 1);
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
+            stage = 4;
 
         timeElapsed+=deltaTime;
     }
