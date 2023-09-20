@@ -16,6 +16,7 @@ public class Button {
     private Action click;
     private boolean hover;
     private Texture button, buttonClick;
+    private int size;
 
     private Template screenTemplate;
 
@@ -23,15 +24,29 @@ public class Button {
         void onAction();
     };
 
-    public Button(float x, float y, String text, BitmapFont font, Action click, Template screenTemplate) {
+    public Button(float x, float y, int size, String text, BitmapFont font, Action click, Template screenTemplate) {
         this.x = x;
         this.y = y;
         this.text = text;
         this.font = font;
         this.click = click;
         this.hover = false;
-        this.button = new Texture("button.png");
-        this.buttonClick = new Texture("buttonClick.png");
+        switch (size) {
+            case 1:
+                this.button = new Texture("button_long.png");
+                this.buttonClick = new Texture("button_long_click.png");
+                break;
+            case 2:
+                this.button = new Texture("button_play.png");
+                this.buttonClick = new Texture("button_play_click.png");
+                break;
+            default:
+                this.button = new Texture("button.png");
+                this.buttonClick = new Texture("button_click.png");
+                break;
+        }
+
+        this.size = size;
 
         GlyphLayout layout = new GlyphLayout(font, text);
         this.width = layout.width;
@@ -41,13 +56,13 @@ public class Button {
     }
 
     public void draw(SpriteBatch batch) {
-
         if(hover) {
             batch.draw(buttonClick, x, y);
         } else {
             batch.draw(button, x, y);
         }
-        font.draw(batch, text, x+25-width/2, y-1);
+        int halfWidth = size == 0 ? 25 : 50;
+        font.draw(batch, text, x+halfWidth-width/2, y-1);
     }
 
     public void update() {
@@ -76,5 +91,9 @@ public class Button {
 
     public BitmapFont getFont() {
         return font;
+    }
+
+    public void setY(float y) {
+        this.y = y;
     }
 }
