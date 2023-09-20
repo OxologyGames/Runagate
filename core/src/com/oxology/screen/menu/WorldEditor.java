@@ -56,13 +56,13 @@ public class WorldEditor extends Template {
         font.setColor(Color.WHITE);
         font.getData().scaleX = .09f;
         font.getData().scaleY = .09f;
-        this.saveBtn = new Button(332, 189, "Save", font, new Button.Action() {
+        this.saveBtn = new Button(332, 189, 0, "Save", font, new Button.Action() {
             @Override
             public void onAction() {
                 saveWorld();
             }
         }, this);
-        this.backBtn = new Button(332, 177, "Back", font, new Button.Action() {
+        this.backBtn = new Button(332, 177, 0, "Back", font, new Button.Action() {
             @Override
             public void onAction() {
                 goBack();

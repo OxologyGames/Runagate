@@ -32,19 +32,19 @@ public class Main extends Template {
         font.setColor(1, 1, 1, 1);
         font.getData().scaleX = .09f;
         font.getData().scaleY = .09f;
-        playBtn = new Button(167, 112, "Play", font, new Button.Action() {
+        playBtn = new Button(142, 112, 1, "Play", font, new Button.Action() {
             @Override
             public void onAction() {
                 goToLevelSelector();
             }
         }, this);
-        worldBtn = new Button(167, 100, "Edit", font, new Button.Action() {
+        worldBtn = new Button(142, 100, 1, "Edit", font, new Button.Action() {
             @Override
             public void onAction() {
                 goToLevelEditor();
             }
         }, this);
-        exitBtn = new Button(167, 88, "Exit", font, new Button.Action() {
+        exitBtn = new Button(142, 88, 1, "Exit", font, new Button.Action() {
             @Override
             public void onAction() {
                 Gdx.app.exit();
