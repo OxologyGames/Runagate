@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.oxology.Runagate;
-import com.oxology.screen.menu.WorldEditor;
 
 public class Splash extends Template {
     private Texture splash;
@@ -59,7 +58,7 @@ public class Splash extends Template {
                 }
                 break;
             case 4:
-                game.setScreen(new WorldEditor(game));
+                game.setScreen(game.getMainMenuScreen());
                 break;
         }
         batch.setColor(visibility, visibility, visibility, 1);
