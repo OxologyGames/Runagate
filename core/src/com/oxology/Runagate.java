@@ -2,11 +2,14 @@ package com.oxology;
 
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.oxology.screen.Splash;
+import com.oxology.screen.menu.Main;
 
 import java.util.Map;
 
 public class Runagate extends com.badlogic.gdx.Game {
 	private int resX, resY;
+
+	private Main mainMenuScreen;
 
 	public Runagate(Map<String, Object> settings) {
 		this.resX = (int) settings.get("width");
@@ -15,6 +18,7 @@ public class Runagate extends com.badlogic.gdx.Game {
 
 	@Override
 	public void create () {
+		this.mainMenuScreen = new Main(this);
 		this.setScreen(new Splash(this));
 	}
 
@@ -30,5 +34,9 @@ public class Runagate extends com.badlogic.gdx.Game {
 
 	public int getResY() {
 		return resY;
+	}
+
+	public Main getMainMenuScreen() {
+		return mainMenuScreen;
 	}
 }
