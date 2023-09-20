@@ -31,6 +31,8 @@ public class LevelEditor extends Template {
     private Button backBtn;
     private Button modeBtn;
 
+    private boolean editable;
+
     private int mode;
     // 0 - Wall
     // 1 - Air
@@ -56,6 +58,8 @@ public class LevelEditor extends Template {
         this.airTexture = new Texture("level/air.png");
         this.wallTexture = new Texture("level/wall.png");
         this.chainTexture = new Texture("level/chain.png");
+
+        this.editable = false;
 
         this.cursor = new Texture("level/cursor.png");
 
@@ -149,7 +153,7 @@ public class LevelEditor extends Template {
             cursorX = (getX()-9)/8;
             cursorY = (getY()-18)/6;
 
-            if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && editable) {
                 switch (mode) {
                     case 0:
                         level.getTiles()[cursorX][cursorY] = Tile.WALL;
@@ -159,6 +163,8 @@ public class LevelEditor extends Template {
                         break;
                 }
             }
+
+            if(!Gdx.input.isButtonPressed(Input.Buttons.LEFT)) editable = true;
 
             if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && mode == 2) {
                 int chainIndex = -1;

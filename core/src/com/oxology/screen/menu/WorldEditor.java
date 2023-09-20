@@ -31,6 +31,7 @@ public class WorldEditor extends Template {
     private int cursorX, cursorY;
 
     private Button saveBtn;
+    private Button backBtn;
 
     public WorldEditor(Runagate game) {
         super(game);
@@ -61,6 +62,12 @@ public class WorldEditor extends Template {
                 saveWorld();
             }
         }, this);
+        this.backBtn = new Button(332, 177, "Back", font, new Button.Action() {
+            @Override
+            public void onAction() {
+                goBack();
+            }
+        }, this);
     }
 
     @Override
@@ -79,6 +86,7 @@ public class WorldEditor extends Template {
         }
 
         saveBtn.draw(levelBatch);
+        backBtn.draw(levelBatch);
         levelBatch.end();
     }
 
@@ -102,7 +110,7 @@ public class WorldEditor extends Template {
             cursorX = (getX()-9)/48;
             cursorY = (getY()-18)/27;
 
-            if(Gdx.input.isTouched())
+            if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))
                 goToLevel();
         }
 
@@ -111,6 +119,7 @@ public class WorldEditor extends Template {
         }
 
         saveBtn.update();
+        backBtn.update();
     }
 
     public void saveLevel(Level level) {
@@ -118,6 +127,10 @@ public class WorldEditor extends Template {
             if(level.getX() == levels.get(i).getX() && level.getY() == levels.get(i).getY())
                 levels.set(i, level);
         }
+    }
+
+    private void goBack() {
+        game.setScreen(game.getMainMenuScreen());
     }
 
     private void saveWorld() {
