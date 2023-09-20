@@ -3,6 +3,7 @@ package com.oxology.screen.menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.oxology.Runagate;
@@ -17,6 +18,9 @@ public class Main extends Template {
     private SpriteBatch batch;
     private OrthographicCamera menuCamera;
 
+    private BitmapFont logoFont;
+    private float logoWidth;
+
     public Main(Runagate game) {
         super(game);
 
@@ -28,19 +32,19 @@ public class Main extends Template {
         font.setColor(1, 1, 1, 1);
         font.getData().scaleX = .09f;
         font.getData().scaleY = .09f;
-        playBtn = new Button(167, 150, "Play", font, new Button.Action() {
+        playBtn = new Button(167, 112, "Play", font, new Button.Action() {
             @Override
             public void onAction() {
                 goToLevelSelector();
             }
         }, this);
-        worldBtn = new Button(167, 138, "Edit", font, new Button.Action() {
+        worldBtn = new Button(167, 100, "Edit", font, new Button.Action() {
             @Override
             public void onAction() {
                 goToLevelEditor();
             }
         }, this);
-        exitBtn = new Button(167, 126, "Exit", font, new Button.Action() {
+        exitBtn = new Button(167, 88, "Exit", font, new Button.Action() {
             @Override
             public void onAction() {
                 Gdx.app.exit();
@@ -48,6 +52,12 @@ public class Main extends Template {
         }, this);
 
         batch = new SpriteBatch();
+
+        logoFont = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
+        logoFont.getData().scaleX = .4f;
+        logoFont.getData().scaleY = .4f;
+        GlyphLayout layout = new GlyphLayout(logoFont, "RUNAGATE");
+        this.logoWidth = layout.width;
     }
 
     @Override
@@ -56,6 +66,7 @@ public class Main extends Template {
         ScreenUtils.clear(0, 0, 0, 1);
 
         batch.begin();
+        logoFont.draw(batch, "RUNAGATE", 384/2f - logoWidth/2f, 180);
         playBtn.draw(batch);
         worldBtn.draw(batch);
         exitBtn.draw(batch);

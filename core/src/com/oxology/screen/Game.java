@@ -28,7 +28,6 @@ public class Game extends Template {
 
         levelBatch.begin();
         levelBatch.draw(new Texture("level.png"), 0, 0);
-
         levelBatch.end();
 
         batch.begin();
