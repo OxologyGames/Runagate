@@ -1,10 +1,9 @@
 package com.oxology.world.entity;
 
-public class Entity {
-    protected float x, y;
+import com.oxology.world.GameObject;
 
-    public Entity(float x, float y) {
-        this.x = x;
-        this.y = y;
+public class Entity extends GameObject {
+    public Entity(int x, int y) {
+        super(x, y, ObjectType.ENTITY);
     }
 }

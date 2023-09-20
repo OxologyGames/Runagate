@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Player extends Entity {
-    public Player(float x, float y) {
+    public Player(int x, int y) {
         super(x, y);
     }
 

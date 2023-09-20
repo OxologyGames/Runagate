@@ -3,11 +3,12 @@ package com.oxology.world;
 import java.io.Serializable;
 
 public class GameObject implements Serializable {
-    private int x, y;
+    protected int x, y;
     private ObjectType objectType;
 
     public enum ObjectType implements Serializable {
         CHAIN,
+        ENTITY,
     }
 
     public GameObject(int x, int y, ObjectType objectType) {
