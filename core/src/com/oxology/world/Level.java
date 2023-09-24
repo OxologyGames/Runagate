@@ -6,18 +6,20 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
+import com.oxology.world.entity.Player;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Level implements Serializable {
-
+    private static final long serialVersionUID = -234042330033409239L;
 
     private Tile[][] tiles;
     private int x, y;
     private transient Texture snippet;
     private List<GameObject> gameObjects;
+    private transient Player player;
 
     public Level(int x, int y) {
         tiles = new Tile[40][30];
@@ -32,6 +34,8 @@ public class Level implements Serializable {
 
         snippet = new Texture("level/levelBorder2.png");
         gameObjects = new ArrayList<>();
+
+        player = new Player(4, 6);
     }
 
     public void generateSnippet() {
@@ -86,5 +90,22 @@ public class Level implements Serializable {
 
     public Texture getSnippet() {
         return snippet;
+    }
+
+    public void update(float deltaTime) {
+        checkColliders();
+        player.update(deltaTime);
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
+    public void checkColliders() {
+        player.setCollider(tiles[(int) player.getX()][(int) player.getY()-1] == Tile.WALL, 0);
     }
 }

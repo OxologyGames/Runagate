@@ -5,9 +5,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.oxology.Runagate;
 import com.oxology.menu.Button;
+import com.oxology.screen.Game;
 import com.oxology.screen.Template;
+import com.oxology.world.Level;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +19,9 @@ public class LevelSelector extends Template {
     private List<UUID> worlds;
     private BitmapFont font;
     private Button playBtn;
+    private Button backBtn;
     private int index;
+    private File worldsFolder;
 
     public LevelSelector(Runagate game) {
         super(game);
@@ -30,11 +34,13 @@ public class LevelSelector extends Template {
         File gameDataFolder = new File(System.getenv("APPDATA"), "Runagate");
         if(!gameDataFolder.exists()) gameDataFolder.mkdirs();
 
-        File worldsFolder = new File(gameDataFolder, "worlds");
+        worldsFolder = new File(gameDataFolder, "worlds");
         if(!worldsFolder.exists()) gameDataFolder.mkdirs();
 
         for(File file : worldsFolder.listFiles()) {
-            worlds.add(UUID.fromString(file.getName()));
+            try {
+                worlds.add(UUID.fromString(file.getName()));
+            } catch(IllegalArgumentException ignored) {}
         }
 
         font = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
@@ -42,10 +48,16 @@ public class LevelSelector extends Template {
         font.getData().scaleX = .09f;
         font.getData().scaleY = .09f;
 
-        playBtn = new Button(16, 195, 2, "", font, new Button.Action() {
+        this.playBtn = new Button(16, 195, 2, "", font, new Button.Action() {
             @Override
             public void onAction() {
                 playWorld();
+            }
+        }, this);
+        this.backBtn = new Button(332, 189, 0, "Back", font, new Button.Action() {
+            @Override
+            public void onAction() {
+                backToMenu();
             }
         }, this);
 
@@ -61,7 +73,10 @@ public class LevelSelector extends Template {
             font.draw(batch, worlds.get(i).toString(), 36, 194-i*12);
         }
 
-        playBtn.draw(batch);
+        if(index > 0)
+            playBtn.draw(batch);
+
+        backBtn.draw(batch);
         batch.end();
     }
 
@@ -74,12 +89,34 @@ public class LevelSelector extends Template {
         }
 
         playBtn.setY(217-(10+index*12));
-        playBtn.update();
+
+        if(index > 0)
+            playBtn.update();
+
+        backBtn.update();
+    }
+
+    private void backToMenu() {
+        game.setScreen(game.getMainMenuScreen());
     }
 
     private void playWorld() {
         UUID world = worlds.get(index-1);
-        System.out.println(world);
+
+        List<Level> levels = new ArrayList<>();
+        File worldFolder = new File(worldsFolder, world.toString());
+        for(File levelFile : worldFolder.listFiles()) {
+            try {
+                FileInputStream inputStream = new FileInputStream(levelFile);
+                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+
+                levels.add((Level) objectInputStream.readObject());
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        game.setScreen(new Game(game, levels));
     }
 
     @Override
