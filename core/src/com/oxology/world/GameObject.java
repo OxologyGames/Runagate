@@ -3,7 +3,7 @@ package com.oxology.world;
 import java.io.Serializable;
 
 public class GameObject implements Serializable {
-    protected int x, y;
+    protected float x, y;
     private ObjectType objectType;
 
     public enum ObjectType implements Serializable {
@@ -11,17 +11,17 @@ public class GameObject implements Serializable {
         ENTITY,
     }
 
-    public GameObject(int x, int y, ObjectType objectType) {
+    public GameObject(float x, float y, ObjectType objectType) {
         this.x = x;
         this.y = y;
         this.objectType = objectType;
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
