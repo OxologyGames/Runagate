@@ -106,6 +106,8 @@ public class Level implements Serializable {
     }
 
     public void checkColliders() {
-        player.setCollider(tiles[(int) player.getX()][(int) player.getY()-1] == Tile.WALL, 0);
+        int y = player.getY() % 1 == 0 ? (int) Math.floor(player.getY()-1) : (int) Math.floor(player.getY());
+        player.setCollider(tiles[(int) (player.getX()+0.5f)][y] == Tile.WALL || tiles[(int) (player.getX()+1.5f)][y] == Tile.WALL, 0);
+        player.onChain(tiles[(int) (player.getX() + 1.0f)][y] == Tile.CHAIN && Math.abs((player.getX() - 1) - (float) Math.floor(player.getX()) + 0.5f) < 0.05f);
     }
 }

@@ -4,5 +4,6 @@ import java.io.Serializable;
 
 public enum Tile implements Serializable {
     AIR,
-    WALL
+    WALL,
+    CHAIN;
 }

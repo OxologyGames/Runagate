@@ -45,8 +45,8 @@ public class LevelEditor extends Template {
 
         this.worldEditorScreen = worldEditorScreen;
 
-        levelCamera = new OrthographicCamera(384, 216);
-        levelCamera.translate(384/2f, 216/2f);
+        levelCamera = new OrthographicCamera(Runagate.MENU_WIDTH, Runagate.MENU_HEIGHT);
+        levelCamera.translate(Runagate.MENU_WIDTH/2f, Runagate.MENU_HEIGHT/2f);
         levelCamera.update();
 
         levelBatch = new SpriteBatch();
@@ -65,26 +65,11 @@ public class LevelEditor extends Template {
 
         BitmapFont font = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
         font.setColor(Color.WHITE);
-        font.getData().scaleX = .09f;
-        font.getData().scaleY = .09f;
-        this.saveBtn = new Button(332, 189, 0, "Save", font, new Button.Action() {
-            @Override
-            public void onAction() {
-                saveLevel();
-            }
-        }, this);
-        this.backBtn = new Button(332, 177, 0, "Back", font, new Button.Action() {
-            @Override
-            public void onAction() {
-                backToWorld();
-            }
-        }, this);
-        this.modeBtn = new Button(332, 165, 0, "Wall", font, new Button.Action() {
-            @Override
-            public void onAction() {
-                changeMode();
-            }
-        }, this);
+        font.getData().scaleX = Runagate.MENU_FONT_SCALE;
+        font.getData().scaleY = Runagate.MENU_FONT_SCALE;
+        this.saveBtn = new Button(332, 189, 0, "Save", font, this::saveLevel, this);
+        this.backBtn = new Button(332, 177, 0, "Back", font, this::backToWorld, this);
+        this.modeBtn = new Button(332, 165, 0, "Wall", font, this::changeMode, this);
 
         this.mode = 0;
     }
@@ -99,6 +84,7 @@ public class LevelEditor extends Template {
             for(int j = 0; j < 30; j++) {
                 Texture texture = airTexture;
                 if(level.getTiles()[i][j] == Tile.WALL) texture = wallTexture;
+                if(level.getTiles()[i][j] == Tile.CHAIN) texture = chainTexture;
                 levelBatch.draw(texture, 9+i*8, 18+j*6);
             }
         }
@@ -107,10 +93,6 @@ public class LevelEditor extends Template {
         saveBtn.draw(levelBatch);
         backBtn.draw(levelBatch);
         modeBtn.draw(levelBatch);
-
-        for(GameObject gameObject : level.getGameObjects()) {
-            levelBatch.draw(chainTexture, 9+gameObject.getX()*8, 18+gameObject.getY()*6);
-        }
 
         levelBatch.end();
     }
@@ -161,24 +143,13 @@ public class LevelEditor extends Template {
                     case 1:
                         level.getTiles()[cursorX][cursorY] = Tile.AIR;
                         break;
+                    case 2:
+                        level.getTiles()[cursorX][cursorY] = Tile.CHAIN;
+                        break;
                 }
             }
 
             if(!Gdx.input.isButtonPressed(Input.Buttons.LEFT)) editable = true;
-
-            if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) && mode == 2) {
-                int chainIndex = -1;
-                for(int i = 0; i < level.getGameObjects().size(); i++) {
-                    if(level.getGameObjects().get(i).getX() == cursorX && level.getGameObjects().get(i).getY() == cursorY)
-                        chainIndex = i;
-                }
-
-                if(chainIndex != -1) {
-                    level.getGameObjects().remove(chainIndex);
-                } else {
-                    level.getGameObjects().add(new GameObject(cursorX, cursorY, GameObject.ObjectType.CHAIN));
-                }
-            }
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
@@ -224,13 +195,13 @@ public class LevelEditor extends Template {
 
     @Override
     public int getX() {
-        float prop = (float) Gdx.graphics.getWidth() / 384;
+        float prop = (float) Gdx.graphics.getWidth() / Runagate.MENU_WIDTH;
         return (int) (Gdx.input.getX() / prop);
     }
 
     @Override
     public int getY() {
-        float prop = (float) Gdx.graphics.getHeight() / 216;
+        float prop = (float) Gdx.graphics.getHeight() / Runagate.MENU_HEIGHT;
         return (int) ((Gdx.graphics.getHeight()-Gdx.input.getY()) / prop);
     }
 }

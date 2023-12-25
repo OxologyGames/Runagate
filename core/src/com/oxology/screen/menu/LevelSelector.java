@@ -26,8 +26,8 @@ public class LevelSelector extends Template {
     public LevelSelector(Runagate game) {
         super(game);
 
-        this.camera = new OrthographicCamera(384, 216);
-        this.camera.translate(384/2f, 216/2f);
+        this.camera = new OrthographicCamera(Runagate.MENU_WIDTH, Runagate.MENU_HEIGHT);
+        this.camera.translate(Runagate.MENU_WIDTH/2f, Runagate.MENU_HEIGHT/2f);
         this.camera.update();
 
         this.worlds = new ArrayList<>();
@@ -45,8 +45,8 @@ public class LevelSelector extends Template {
 
         font = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
         font.setColor(1, 1, 1, 1);
-        font.getData().scaleX = .09f;
-        font.getData().scaleY = .09f;
+        font.getData().scaleX = Runagate.MENU_FONT_SCALE;
+        font.getData().scaleY = Runagate.MENU_FONT_SCALE;
 
         this.playBtn = new Button(16, 195, 2, "", font, new Button.Action() {
             @Override
@@ -121,13 +121,13 @@ public class LevelSelector extends Template {
 
     @Override
     public int getX() {
-        float prop = (float) Gdx.graphics.getWidth() / 384;
+        float prop = (float) Gdx.graphics.getWidth() / Runagate.MENU_WIDTH;
         return (int) (Gdx.input.getX() / prop);
     }
 
     @Override
     public int getY() {
-        float prop = (float) Gdx.graphics.getHeight() / 216;
+        float prop = (float) Gdx.graphics.getHeight() / Runagate.MENU_HEIGHT;
         return (int) ((Gdx.graphics.getHeight()-Gdx.input.getY()) / prop);
     }
 }

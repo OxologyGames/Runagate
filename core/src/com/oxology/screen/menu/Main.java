@@ -24,14 +24,14 @@ public class Main extends Template {
     public Main(Runagate game) {
         super(game);
 
-        menuCamera = new OrthographicCamera(384, 216);
-        menuCamera.translate(384/2f, 216/2f);
+        menuCamera = new OrthographicCamera(Runagate.MENU_WIDTH, Runagate.MENU_HEIGHT);
+        menuCamera.translate(Runagate.MENU_WIDTH/2f, Runagate.MENU_HEIGHT/2f);
         menuCamera.update();
 
         BitmapFont font = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
         font.setColor(1, 1, 1, 1);
-        font.getData().scaleX = .09f;
-        font.getData().scaleY = .09f;
+        font.getData().scaleX = Runagate.MENU_FONT_SCALE;
+        font.getData().scaleY = Runagate.MENU_FONT_SCALE;
         playBtn = new Button(142, 112, 1, "Play", font, new Button.Action() {
             @Override
             public void onAction() {
@@ -92,13 +92,13 @@ public class Main extends Template {
 
     @Override
     public int getX() {
-        float prop = (float) Gdx.graphics.getWidth() / 384;
+        float prop = (float) Gdx.graphics.getWidth() / Runagate.MENU_WIDTH;
         return (int) (Gdx.input.getX() / prop);
     }
 
     @Override
     public int getY() {
-        float prop = (float) Gdx.graphics.getHeight() / 216;
+        float prop = (float) Gdx.graphics.getHeight() / Runagate.MENU_HEIGHT;
         return (int) ((Gdx.graphics.getHeight()-Gdx.input.getY()) / prop);
     }
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
+import com.oxology.world.GameObject;
 import com.oxology.world.Level;
 import com.oxology.world.Tile;
 import com.oxology.world.entity.Player;
@@ -18,6 +19,7 @@ public class Game extends Template {
 
     //temp
     private Texture wall;
+    private Texture chain;
 
     public Game(Runagate game, List<Level> levels) {
         super(game);
@@ -33,6 +35,7 @@ public class Game extends Template {
             levels.get(0).setPlayer(new Player(4, 6));
 
         wall = new Texture("level/wall.png");
+        chain = new Texture("level/chain.png");
     }
 
     @Override
@@ -44,6 +47,8 @@ public class Game extends Template {
             for(int j = 0; j < 30; j++) {
                 if(levels.get(0).getTiles()[i][j] == Tile.WALL) {
                     levelBatch.draw(wall, i*8, j*6);
+                } else if(levels.get(0).getTiles()[i][j] == Tile.CHAIN) {
+                    levelBatch.draw(chain, i*8, j*6);
                 }
             }
         }
