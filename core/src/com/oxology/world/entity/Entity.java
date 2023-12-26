@@ -5,24 +5,28 @@ import com.oxology.world.GameObject;
 public class Entity extends GameObject {
     private static final long serialVersionUID = -3038644230555076026L;
 
+    public static final float GRAVITY = 20.0f;
+
     protected static final int NONE = 0;
     protected static final int LEFT = 1;
     protected static final int RIGHT = 2;
+    protected static final int UP = 3;
+    protected static final int DOWN = 4;
 
-    protected static final float ACCELERATION_SPEED = 5.0f;
-    protected static final float ACCELERATION_AIR_SPEED = 2.0f;
-    protected static final float DECELERATION_SPEED = 0.2f;
-    protected static final float DECELERATION_AIR_SPEED = 0.01f;
+    private static final float ACCELERATION_SPEED = 5.0f;
+    private static final float ACCELERATION_AIR_SPEED = 2.0f;
+    private static final float DECELERATION_SPEED = 0.2f;
+    private static final float DECELERATION_AIR_SPEED = 0.01f;
 
-    protected static final float JUMP_SPEED = 8.0f;
-    protected static final float CHAIN_SPEED = 5.0f;
+    private static final float JUMP_SPEED = 8.0f;
+    private static final float CHAIN_SPEED = 5.0f;
 
-    final float gravity = 20.0f;
-    protected float xSpeed, ySpeed;
+    private float xSpeed, ySpeed;
     protected boolean[] colliders;
-    protected boolean onChain;
+    private boolean onChain;
     private boolean jumpedOnChain;
-    protected boolean jumpedOffChain;
+    private boolean jumpedOffChain;
+    private int facing;
 
     public Entity(float x, float y) {
         super(x, y, ObjectType.ENTITY);
@@ -50,12 +54,66 @@ public class Entity extends GameObject {
         y += ySpeed*deltaTime;
 
         if((!colliders[0] && !onChain) || ySpeed > 0) {
-            ySpeed -= gravity*deltaTime;
+            ySpeed -= GRAVITY*deltaTime;
         }
 
         if(colliders[0] && ySpeed < 0) {
             ySpeed = 0;
             y = Math.round(y);
+        }
+    }
+
+    protected void jump() {
+        if(colliders[0] || onChain) {
+            ySpeed = JUMP_SPEED;
+            if(onChain) {
+                jumpedOffChain = true;
+                switch (facing) {
+                    case LEFT:
+                        xSpeed = -ACCELERATION_SPEED;
+                        break;
+                    case RIGHT:
+                        xSpeed = ACCELERATION_SPEED;
+                        break;
+                }
+            }
+        }
+    }
+
+    protected void move(int facing) {
+        float acceleration = ACCELERATION_SPEED;
+        if(!colliders[0])
+            acceleration = ACCELERATION_AIR_SPEED;
+
+        if(facing == RIGHT) {
+            if(xSpeed <= acceleration) {
+                if (!onChain)
+                    xSpeed = acceleration;
+                this.facing = RIGHT;
+            }
+        } else if(facing == LEFT) {
+            if(xSpeed >= -acceleration) {
+                if (!onChain)
+                    xSpeed = -acceleration;
+                this.facing = LEFT;
+            }
+        } else if(onChain && facing == UP) {
+            ySpeed = CHAIN_SPEED;
+        } else if(onChain && facing == DOWN) {
+            ySpeed = -CHAIN_SPEED;
+        } else {
+            if(onChain)
+                ySpeed = 0;
+
+            this.facing = NONE;
+            float deceleration = DECELERATION_SPEED;
+            if(!colliders[0])
+                deceleration = DECELERATION_AIR_SPEED;
+
+            if(Math.abs(xSpeed) <= deceleration) xSpeed = 0.0f;
+
+            if(xSpeed != 0.0f)
+                xSpeed += xSpeed > 0.0f ? -deceleration : deceleration;
         }
     }
 
