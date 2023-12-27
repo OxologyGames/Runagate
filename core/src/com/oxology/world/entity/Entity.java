@@ -5,7 +5,7 @@ import com.oxology.world.GameObject;
 public class Entity extends GameObject {
     private static final long serialVersionUID = -3038644230555076026L;
 
-    public static final float GRAVITY = 20.0f;
+    public static final float GRAVITY = 25.0f;
 
     protected static final int NONE = 0;
     protected static final int LEFT = 1;
@@ -50,9 +50,6 @@ public class Entity extends GameObject {
             ySpeed = 0;
         }
 
-        x += xSpeed*deltaTime;
-        y += ySpeed*deltaTime;
-
         if((!colliders[0] && !onChain) || ySpeed > 0) {
             ySpeed -= GRAVITY*deltaTime;
         }
@@ -61,6 +58,19 @@ public class Entity extends GameObject {
             ySpeed = 0;
             y = Math.round(y);
         }
+
+        if(colliders[1] && xSpeed < 0) {
+            xSpeed = 0;
+            x = Math.round(x*2f)/2f;
+        }
+
+        if(colliders[2] && xSpeed > 0) {
+            xSpeed = 0;
+            x = Math.round(x*2f)/2f;
+        }
+
+        x += xSpeed*deltaTime;
+        y += ySpeed*deltaTime;
     }
 
     protected void jump() {
@@ -85,13 +95,13 @@ public class Entity extends GameObject {
         if(!colliders[0])
             acceleration = ACCELERATION_AIR_SPEED;
 
-        if(facing == RIGHT) {
+        if(!colliders[2] && facing == RIGHT) {
             if(xSpeed <= acceleration) {
                 if (!onChain)
                     xSpeed = acceleration;
                 this.facing = RIGHT;
             }
-        } else if(facing == LEFT) {
+        } else if(!colliders[1] && facing == LEFT) {
             if(xSpeed >= -acceleration) {
                 if (!onChain)
                     xSpeed = -acceleration;
