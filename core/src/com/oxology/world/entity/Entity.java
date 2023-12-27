@@ -1,11 +1,13 @@
 package com.oxology.world.entity;
 
 import com.oxology.world.GameObject;
+import com.oxology.world.Level;
+import com.oxology.world.Tile;
 
 public class Entity extends GameObject {
     private static final long serialVersionUID = -3038644230555076026L;
 
-    public static final float GRAVITY = 25.0f;
+    public static final float GRAVITY = 23.0f;
 
     protected static final int NONE = 0;
     protected static final int LEFT = 1;
@@ -14,9 +16,9 @@ public class Entity extends GameObject {
     protected static final int DOWN = 4;
 
     private static final float ACCELERATION_SPEED = 5.0f;
-    private static final float ACCELERATION_AIR_SPEED = 2.0f;
-    private static final float DECELERATION_SPEED = 0.2f;
-    private static final float DECELERATION_AIR_SPEED = 0.01f;
+    private static final float ACCELERATION_AIR_SPEED = 3.5f;
+    private static final float DECELERATION_SPEED = 0.8f;
+    private static final float DECELERATION_AIR_SPEED = 0.02f;
 
     private static final float JUMP_SPEED = 8.0f;
     private static final float CHAIN_SPEED = 5.0f;
@@ -127,12 +129,38 @@ public class Entity extends GameObject {
         }
     }
 
-    public boolean[] getColliders() {
-        return colliders;
+    private void setCollider(boolean value, int index) {
+        this.colliders[index] = value;
     }
 
-    public void setCollider(boolean value, int index) {
-        this.colliders[index] = value;
+    public void checkForCollisions(float deltaTime, Level level) {
+        Tile[][] tiles = level.getTiles();
+
+        boolean collider0 =
+                tiles[(int) (getNextX(deltaTime) + 0.6f)][getNextY(deltaTime) % 1 == 0 ? (int) Math.floor(getNextY(deltaTime)-1) : (int) Math.floor(getNextY(deltaTime))] == Tile.WALL ||
+                        tiles[(int) (getNextX(deltaTime) + 1.4f)][getNextY(deltaTime) % 1 == 0 ? (int) Math.floor(getNextY(deltaTime)-1) : (int) Math.floor(getNextY(deltaTime))] == Tile.WALL;
+
+        boolean collider1 =
+                tiles[(getNextX(deltaTime)*2) % 1 == 0 ? (int) (getNextX(deltaTime)-0.5f) : (int) (getNextX(deltaTime)+0.5f)][(int) Math.floor(getNextY(deltaTime)+0.1f)] == Tile.WALL ||
+                        tiles[(getNextX(deltaTime)*2) % 1 == 0 ? (int) (getNextX(deltaTime)-0.5f) : (int) (getNextX(deltaTime)+0.5f)][(int) Math.floor(getNextY(deltaTime)+1.1f)] == Tile.WALL ||
+                        tiles[(getNextX(deltaTime)*2) % 1 == 0 ? (int) (getNextX(deltaTime)-0.5f) : (int) (getNextX(deltaTime)+0.5f)][(int) Math.floor(getNextY(deltaTime)+1.9f)] == Tile.WALL;
+
+        boolean collider2 =
+                tiles[((getNextX(deltaTime)*2) % 1 == 0 ? (int) (getNextX(deltaTime)+1.0f) : (int) (getNextX(deltaTime)+0.5f))+1][(int) Math.floor(getNextY(deltaTime)+0.1f)] == Tile.WALL ||
+                        tiles[((getNextX(deltaTime)*2) % 1 == 0 ? (int) (getNextX(deltaTime)+1.0f) : (int) (getNextX(deltaTime)+0.5f))+1][(int) Math.floor(getNextY(deltaTime)+1.1f)] == Tile.WALL ||
+                        tiles[((getNextX(deltaTime)*2) % 1 == 0 ? (int) (getNextX(deltaTime)+1.0f) : (int) (getNextX(deltaTime)+0.5f))+1][(int) Math.floor(getNextY(deltaTime)+1.9f)] == Tile.WALL;
+
+        boolean collider3 = false;//TODO
+
+        boolean onChain =
+                tiles[(int) (getNextX(deltaTime) + 1.0f)][getNextY(deltaTime) % 1 == 0 ? (int) Math.floor(getNextY(deltaTime)) : (int) Math.floor(getNextY(deltaTime)+1)] == Tile.CHAIN &&
+                        Math.abs((getNextX(deltaTime) - 1) - (float) Math.floor(getNextX(deltaTime)) + 0.5f) < 0.05f;
+
+        setCollider(collider0, 0);
+        setCollider(collider1, 1);
+        setCollider(collider2, 2);
+        setCollider(collider3, 3);
+        onChain(onChain);
     }
 
     public void onChain(boolean isOnChain) {
@@ -144,5 +172,13 @@ public class Entity extends GameObject {
         } else if(!jumpedOffChain) {
             x = (float) Math.floor(x)+0.5f;
         }
+    }
+
+    private float getNextX(float deltaTime) {
+        return x + (xSpeed * deltaTime);
+    }
+
+    private float getNextY(float deltaTime) {
+        return y + (ySpeed * deltaTime);
     }
 }
