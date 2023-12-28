@@ -79,6 +79,7 @@ public class DesktopLauncher {
 
 		System.out.println(values.values());
 
-		new Lwjgl3Application(new Runagate(values), config);
+		Runagate.setInstance(new Runagate(values));
+		new Lwjgl3Application(Runagate.getInstance(), config);
 	}
 }

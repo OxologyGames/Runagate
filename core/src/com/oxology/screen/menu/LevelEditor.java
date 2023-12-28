@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
 import com.oxology.menu.Button;
 import com.oxology.screen.Template;
-import com.oxology.world.GameObject;
 import com.oxology.world.Level;
 import com.oxology.world.Tile;
 
@@ -40,8 +39,8 @@ public class LevelEditor extends Template {
 
     private WorldEditor worldEditorScreen;
 
-    public LevelEditor(WorldEditor worldEditorScreen, Runagate game, Level level) {
-        super(game);
+    public LevelEditor(WorldEditor worldEditorScreen, Level level) {
+        super();
 
         this.worldEditorScreen = worldEditorScreen;
 
@@ -97,7 +96,7 @@ public class LevelEditor extends Template {
         levelBatch.end();
     }
 
-    private void update(float deltaTime) {
+    public void update(float deltaTime) {
         levelCamera.update();
         levelBatch.setProjectionMatrix(levelCamera.combined);
 
@@ -190,7 +189,7 @@ public class LevelEditor extends Template {
 
     private void backToWorld() {
         saveLevel();
-        game.setScreen(worldEditorScreen);
+        Runagate.getInstance().setScreen(worldEditorScreen);
     }
 
     @Override

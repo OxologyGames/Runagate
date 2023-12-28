@@ -21,8 +21,8 @@ public class Game extends Template {
     private Texture wall;
     private Texture chain;
 
-    public Game(Runagate game, List<Level> levels) {
-        super(game);
+    public Game(List<Level> levels) {
+        super();
 
         levelCamera = new OrthographicCamera(320, 180);
         levelCamera.translate(320/2f, 180/2f);

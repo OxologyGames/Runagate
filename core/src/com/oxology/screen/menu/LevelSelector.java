@@ -23,8 +23,8 @@ public class LevelSelector extends Template {
     private int index;
     private File worldsFolder;
 
-    public LevelSelector(Runagate game) {
-        super(game);
+    public LevelSelector() {
+        super();
 
         this.camera = new OrthographicCamera(Runagate.MENU_WIDTH, Runagate.MENU_HEIGHT);
         this.camera.translate(Runagate.MENU_WIDTH/2f, Runagate.MENU_HEIGHT/2f);
@@ -80,7 +80,7 @@ public class LevelSelector extends Template {
         batch.end();
     }
 
-    private void update(float deltaTime) {
+    public void update(float deltaTime) {
         batch.setProjectionMatrix(this.camera.combined);
         this.camera.update();
 
@@ -97,7 +97,7 @@ public class LevelSelector extends Template {
     }
 
     private void backToMenu() {
-        game.setScreen(game.getMainMenuScreen());
+        Runagate.getInstance().setScreen(Runagate.getInstance().getMainMenuScreen());
     }
 
     private void playWorld() {
@@ -116,7 +116,7 @@ public class LevelSelector extends Template {
             }
         }
 
-        game.setScreen(new Game(game, levels));
+        Runagate.getInstance().setScreen(new Game(levels));
     }
 
     @Override

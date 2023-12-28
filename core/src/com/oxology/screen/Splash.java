@@ -5,67 +5,39 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.oxology.Runagate;
 
+import java.util.Random;
+
 public class Splash extends Template {
     private Texture splash;
-    private float timeElapsed;
-    private float visibility;
-    private int stage;
+    private Random random;
 
-    public Splash(Runagate game) {
-        super(game);
+    public Splash() {
+        super(true, true);
+        random = new Random();
+
         this.splash = new Texture("splash.png");
-        this.visibility = 0;
-        this.stage = 0;
-
-        batch.setColor(visibility, visibility, visibility, 1);
+        setFading(true);
     }
 
     @Override
     public void render(float deltaTime) {
         update(deltaTime);
 
+        float color = random.nextFloat(0.7f, 1.0f)*batch.getColor().r;
+        batch.setColor(color, color, color, 1);
+
         batch.begin();
         batch.draw(splash, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
     }
 
-    public void update(float deltaTime) {
-        switch (stage) {
-            case 0:
-                if(timeElapsed > 0.5f) {
-                    stage++;
-                    timeElapsed = 0;
-                }
-                break;
-            case 1:
-                visibility += deltaTime*0.5f;
-                if(timeElapsed > 2f) {
-                    stage++;
-                    timeElapsed = 0;
-                }
-                break;
-            case 2:
-                if(timeElapsed > 1.5f) {
-                    stage++;
-                    timeElapsed = 0;
-                }
-                break;
-            case 3:
-                visibility -= deltaTime*0.5f;
-                if(timeElapsed > 2f) {
-                    stage++;
-                    timeElapsed = 0;
-                }
-                break;
-            case 4:
-                game.setScreen(game.getMainMenuScreen());
-                break;
-        }
-        batch.setColor(visibility, visibility, visibility, 1);
+    public void update(float delta) {
+        super.update(delta);
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
-            stage = 4;
+            setStage(4);
 
-        timeElapsed+=deltaTime;
+        if(getStage() == 4)
+            Runagate.getInstance().setScreen(Runagate.getInstance().getMainMenuScreen());
     }
 }

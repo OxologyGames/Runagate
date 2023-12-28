@@ -3,27 +3,34 @@ package com.oxology;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.oxology.screen.Splash;
 import com.oxology.screen.menu.Main;
+import com.oxology.util.TextureManager;
 
 import java.util.Map;
 
 public class Runagate extends com.badlogic.gdx.Game {
+	private static Runagate instance;
+
 	public static final int MENU_WIDTH = 384;
 	public static final int MENU_HEIGHT = 216;
 	public static final float MENU_FONT_SCALE = .09f;
 
 	private int resX, resY;
 
+	private final TextureManager textureManager;
+
 	private Main mainMenuScreen;
 
 	public Runagate(Map<String, Object> settings) {
 		this.resX = (int) settings.get("width");
 		this.resY = (int) settings.get("height");
+
+		textureManager = new TextureManager();
 	}
 
 	@Override
 	public void create () {
-		this.mainMenuScreen = new Main(this);
-		this.setScreen(new Splash(this));
+		this.mainMenuScreen = new Main();
+		this.setScreen(new Splash());
 	}
 
 	@Override
@@ -42,5 +49,17 @@ public class Runagate extends com.badlogic.gdx.Game {
 
 	public Main getMainMenuScreen() {
 		return mainMenuScreen;
+	}
+
+	public static void setInstance(Runagate runagate) {
+		instance = runagate;
+	}
+
+	public static Runagate getInstance() {
+		return instance;
+	}
+
+	public TextureManager getTextureManager() {
+		return textureManager;
 	}
 }

@@ -33,8 +33,8 @@ public class WorldEditor extends Template {
     private Button saveBtn;
     private Button backBtn;
 
-    public WorldEditor(Runagate game) {
-        super(game);
+    public WorldEditor() {
+        super();
 
         levelCamera = new OrthographicCamera(384, 216);
         levelCamera.translate(384/2f, 216/2f);
@@ -90,7 +90,7 @@ public class WorldEditor extends Template {
         levelBatch.end();
     }
 
-    private void update(float deltaTime) {
+    public void update(float deltaTime) {
         levelCamera.update();
         levelBatch.setProjectionMatrix(levelCamera.combined);
 
@@ -130,7 +130,7 @@ public class WorldEditor extends Template {
     }
 
     private void goBack() {
-        game.setScreen(game.getMainMenuScreen());
+        Runagate.getInstance().setScreen(Runagate.getInstance().getMainMenuScreen());
     }
 
     private void saveWorld() {
@@ -161,7 +161,7 @@ public class WorldEditor extends Template {
 
         this.levels.add(level);
 
-        game.setScreen(new LevelEditor(this, game, level));
+        Runagate.getInstance().setScreen(new LevelEditor(this, level));
     }
 
     public void goToLevel(int x, int y) {

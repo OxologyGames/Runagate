@@ -62,6 +62,7 @@ public class Button {
             batch.draw(button, x, y);
         }
         int halfWidth = size == 0 ? 25 : 50;
+        font.setColor(batch.getColor());
         font.draw(batch, text, x+halfWidth-width/2, y-1);
     }
 
