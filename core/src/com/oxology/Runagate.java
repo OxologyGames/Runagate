@@ -10,8 +10,8 @@ import java.util.Map;
 public class Runagate extends com.badlogic.gdx.Game {
 	private static Runagate instance;
 
-	public static final int MENU_WIDTH = 384;
-	public static final int MENU_HEIGHT = 216;
+	public static final int MENU_WIDTH = 1920;
+	public static final int MENU_HEIGHT = 1080;
 	public static final float MENU_FONT_SCALE = .09f;
 
 	private int resX, resY;

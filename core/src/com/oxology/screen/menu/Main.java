@@ -3,7 +3,6 @@ package com.oxology.screen.menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.oxology.Runagate;
 import com.oxology.menu.Button;
@@ -16,11 +15,8 @@ public class Main extends Template {
 
     private final OrthographicCamera menuCamera;
 
-    private final BitmapFont logoFont;
-    private final float logoWidth;
-
     public Main() {
-        super(true, false);
+        super(true, true);
 
         menuCamera = new OrthographicCamera(Runagate.MENU_WIDTH, Runagate.MENU_HEIGHT);
         menuCamera.translate(Runagate.MENU_WIDTH/2f, Runagate.MENU_HEIGHT/2f);
@@ -35,12 +31,6 @@ public class Main extends Template {
         exitBtn = new Button(142, 88, 1, "Exit", font, Gdx.app::exit, this);
 
         setFading(true);
-
-        logoFont = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
-        logoFont.getData().scaleX = .4f;
-        logoFont.getData().scaleY = .4f;
-        GlyphLayout layout = new GlyphLayout(logoFont, "RUNAGATE");
-        this.logoWidth = layout.width;
     }
 
     @Override
@@ -49,8 +39,7 @@ public class Main extends Template {
         ScreenUtils.clear(0, 0, 0, 1);
 
         batch.begin();
-        logoFont.setColor(batch.getColor());
-        logoFont.draw(batch, "RUNAGATE", Runagate.MENU_WIDTH/2f - logoWidth/2f, 180);
+        batch.draw(Runagate.getInstance().getTextureManager().logo, (Runagate.MENU_WIDTH/2f)-(1500/2f), 750);
         playBtn.draw(batch);
         worldBtn.draw(batch);
         exitBtn.draw(batch);
