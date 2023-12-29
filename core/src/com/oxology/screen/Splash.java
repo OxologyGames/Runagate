@@ -33,7 +33,10 @@ public class Splash extends Template {
         if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
             setStage(4);
 
-        if(getStage() == 4)
+        if(getStage() == AFTER_FADE_IN && getTimeElapsed() > 2f)
+            setStage(FADE_OUT);
+
+        if(getStage() == AFTER_FADE_OUT)
             Runagate.getInstance().setScreen(Runagate.getInstance().getMainMenuScreen());
     }
 }

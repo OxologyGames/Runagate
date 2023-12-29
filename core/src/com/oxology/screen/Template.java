@@ -7,6 +7,12 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
 
 public class Template implements Screen {
+    public static final int BEFORE_FADE_IN = 0;
+    public static final int FADE_IN = 1;
+    public static final int AFTER_FADE_IN = 2;
+    public static final int FADE_OUT = 3;
+    public static final int AFTER_FADE_OUT = 4;
+
     protected OrthographicCamera camera;
     protected SpriteBatch batch;
     protected int viewportWidth, viewportHeight;
@@ -27,10 +33,10 @@ public class Template implements Screen {
 
         if(fadeIn) {
             this.visibility = 0;
-            this.stage = 0;
+            this.stage = BEFORE_FADE_IN;
         } else if(fadeOut) {
             this.visibility = 1;
-            this.stage = 3;
+            this.stage = FADE_OUT;
         }
 
         this.fadeOut = fadeOut;
@@ -49,26 +55,20 @@ public class Template implements Screen {
     public void update(float delta) {
         if(fading) {
             switch (stage) {
-                case 0:
+                case BEFORE_FADE_IN:
                     if(timeElapsed > 0.5f) {
                         stage++;
                         timeElapsed = 0;
                     }
                     break;
-                case 1:
+                case FADE_IN:
                     visibility += delta*0.5f;
                     if(timeElapsed > 2f) {
                         stage++;
                         timeElapsed = 0;
                     }
                     break;
-                case 2:
-                    if(timeElapsed > 1.5f) {
-                        stage++;
-                        timeElapsed = 0;
-                    }
-                    break;
-                case 3:
+                case FADE_OUT:
                     visibility -= delta*0.5f;
                     if(timeElapsed > 2f) {
                         stage++;
@@ -78,7 +78,7 @@ public class Template implements Screen {
             }
             batch.setColor(visibility, visibility, visibility, 1);
 
-            if(!fadeOut && stage == 2)
+            if(!fadeOut && stage == AFTER_FADE_IN)
                 fading = false;
         }
 
@@ -112,12 +112,17 @@ public class Template implements Screen {
         this.camera.update();
     }
 
+    public float getTimeElapsed() {
+        return timeElapsed;
+    }
+
     public int getStage() {
         return stage;
     }
 
     public void setStage(int stage) {
         this.stage = stage;
+        this.timeElapsed = 0;
     }
 
     public void setFading(boolean fading) {
