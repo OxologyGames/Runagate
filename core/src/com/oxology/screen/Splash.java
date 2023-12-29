@@ -2,20 +2,16 @@ package com.oxology.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.oxology.Runagate;
 
 import java.util.Random;
 
 public class Splash extends Template {
-    private Texture splash;
-    private Random random;
+    private final Random random;
 
     public Splash() {
         super(true, true);
         random = new Random();
-
-        this.splash = new Texture("splash.png");
         setFading(true);
     }
 
@@ -27,7 +23,7 @@ public class Splash extends Template {
         batch.setColor(color, color, color, 1);
 
         batch.begin();
-        batch.draw(splash, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.draw(Runagate.getInstance().getTextureManager().splash, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
     }
 

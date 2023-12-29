@@ -16,15 +16,13 @@ public class Runagate extends com.badlogic.gdx.Game {
 
 	private int resX, resY;
 
-	private final TextureManager textureManager;
+	private TextureManager textureManager;
 
 	private Main mainMenuScreen;
 
 	public Runagate(Map<String, Object> settings) {
 		this.resX = (int) settings.get("width");
 		this.resY = (int) settings.get("height");
-
-		textureManager = new TextureManager();
 	}
 
 	@Override
@@ -60,6 +58,9 @@ public class Runagate extends com.badlogic.gdx.Game {
 	}
 
 	public TextureManager getTextureManager() {
+		if(textureManager == null)
+			textureManager = new TextureManager();
+
 		return textureManager;
 	}
 }
