@@ -66,9 +66,9 @@ public class LevelEditor extends Template {
         font.setColor(Color.WHITE);
         font.getData().scaleX = Runagate.MENU_FONT_SCALE;
         font.getData().scaleY = Runagate.MENU_FONT_SCALE;
-        this.saveBtn = new Button(332, 189, 0, "Save", font, this::saveLevel, this);
-        this.backBtn = new Button(332, 177, 0, "Back", font, this::backToWorld, this);
-        this.modeBtn = new Button(332, 165, 0, "Wall", font, this::changeMode, this);
+//        this.saveBtn = new Button(332, 189, 0, "Save", font, this::saveLevel, this);
+//        this.backBtn = new Button(332, 177, 0, "Back", font, this::backToWorld, this);
+//        this.modeBtn = new Button(332, 165, 0, "Wall", font, this::changeMode, this);
 
         this.mode = 0;
     }
@@ -158,9 +158,9 @@ public class LevelEditor extends Template {
                 level.getTiles()[cursorX][cursorY] = Tile.AIR;
         }
 
-        saveBtn.update();
-        backBtn.update();
-        modeBtn.update();
+        saveBtn.update(deltaTime);
+        backBtn.update(deltaTime);
+        modeBtn.update(deltaTime);
     }
 
     private void changeMode() {

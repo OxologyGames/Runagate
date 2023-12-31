@@ -3,7 +3,6 @@ package com.oxology.screen.menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.utils.ScreenUtils;
 import com.oxology.Runagate;
 import com.oxology.menu.Button;
 import com.oxology.screen.Template;
@@ -12,6 +11,8 @@ public class Main extends Template {
     private final Button playBtn;
     private final Button worldBtn;
     private final Button exitBtn;
+
+    private final BitmapFont version;
 
     private final OrthographicCamera menuCamera;
 
@@ -22,13 +23,14 @@ public class Main extends Template {
         menuCamera.translate(Runagate.MENU_WIDTH/2f, Runagate.MENU_HEIGHT/2f);
         menuCamera.update();
 
-        BitmapFont font = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
-        font.setColor(1, 1, 1, 1);
-        font.getData().scaleX = Runagate.MENU_FONT_SCALE;
-        font.getData().scaleY = Runagate.MENU_FONT_SCALE;
-        playBtn = new Button(142, 112, 1, "Play", font, this::goToLevelSelector, this);
-        worldBtn = new Button(142, 100, 1, "Edit", font, this::goToLevelEditor, this);
-        exitBtn = new Button(142, 88, 1, "Exit", font, Gdx.app::exit, this);
+        version = Runagate.getInstance().getTextureManager().getBitmapFont(24, 6);
+        version.setColor(1, 1, 1, 1);
+
+        BitmapFont font = Runagate.getInstance().getTextureManager().getBitmapFont(64, 16);
+        font.setColor(0, 0, 0, 1);
+        playBtn = new Button(Runagate.MENU_WIDTH/2f - 720/2f, 700, 720, 128, "PLAY", font, this::goToLevelSelector);
+        worldBtn = new Button(Runagate.MENU_WIDTH/2f - 720/2f, 550, 720, 128, "EDIT", font, this::goToLevelEditor);
+        exitBtn = new Button(Runagate.MENU_WIDTH/2f - 720/2f, 400, 720, 128, "EXIT", font, Gdx.app::exit);
 
         setFading(true);
     }
@@ -36,13 +38,15 @@ public class Main extends Template {
     @Override
     public void render(float deltaTime) {
         update(deltaTime);
-        ScreenUtils.clear(0, 0, 0, 1);
 
         batch.begin();
-        batch.draw(Runagate.getInstance().getTextureManager().logo, (Runagate.MENU_WIDTH/2f)-(1500/2f), 750);
+        batch.draw(Runagate.getInstance().getTextureManager().logo, (Runagate.MENU_WIDTH/2f)-(1500/2f), 925);
+
         playBtn.draw(batch);
-        worldBtn.draw(batch);
         exitBtn.draw(batch);
+        worldBtn.draw(batch);
+
+        version.draw(batch, "Version: " + Runagate.VERSION, 5, 25);
         batch.end();
     }
 
@@ -52,9 +56,11 @@ public class Main extends Template {
         menuCamera.update();
         batch.setProjectionMatrix(menuCamera.combined);
 
-        playBtn.update();
-        worldBtn.update();
-        exitBtn.update();
+        playBtn.update(delta);
+        worldBtn.update(delta);
+        exitBtn.update(delta);
+
+        version.setColor(1, 1, 1, batch.getColor().a);
     }
 
     public void goToLevelSelector() {

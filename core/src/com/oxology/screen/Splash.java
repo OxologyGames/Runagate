@@ -2,25 +2,28 @@ package com.oxology.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.oxology.Runagate;
 
 import java.util.Random;
 
 public class Splash extends Template {
     private final Random random;
+//    private final Sound sound;
 
     public Splash() {
         super(true, true);
         random = new Random();
         setFading(true);
+//        sound = Gdx.audio.newSound(Gdx.files.internal("splash.mp3"));
+//        sound.play();
     }
 
     @Override
     public void render(float deltaTime) {
         update(deltaTime);
 
-        float color = random.nextFloat(0.7f, 1.0f)*batch.getColor().r;
-        batch.setColor(color, color, color, 1);
+        batch.setColor(batch.getColor().mul(random.nextFloat(0.8f, 1.0f)));
 
         batch.begin();
         batch.draw(Runagate.getInstance().getTextureManager().splash, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

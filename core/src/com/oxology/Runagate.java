@@ -1,22 +1,26 @@
 package com.oxology;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.oxology.screen.Splash;
+import com.oxology.screen.Template;
 import com.oxology.screen.menu.Main;
-import com.oxology.util.TextureManager;
+import com.oxology.util.AssetManager;
 
 import java.util.Map;
 
 public class Runagate extends com.badlogic.gdx.Game {
+	public static final String VERSION = "1.0alpha";
+
 	private static Runagate instance;
 
-	public static final int MENU_WIDTH = 1920;
-	public static final int MENU_HEIGHT = 1080;
-	public static final float MENU_FONT_SCALE = .09f;
+	public static final int MENU_WIDTH = 2560;
+	public static final int MENU_HEIGHT = 1440;
+	public static final float MENU_FONT_SCALE = 0.2f;
 
 	private int resX, resY;
 
-	private TextureManager textureManager;
+	private AssetManager assetManager;
 
 	private Main mainMenuScreen;
 
@@ -57,10 +61,26 @@ public class Runagate extends com.badlogic.gdx.Game {
 		return instance;
 	}
 
-	public TextureManager getTextureManager() {
-		if(textureManager == null)
-			textureManager = new TextureManager();
+	public AssetManager getTextureManager() {
+		if(assetManager == null)
+			assetManager = new AssetManager();
 
-		return textureManager;
+		return assetManager;
+	}
+
+	public int getX() {
+		if(getScreen() != null && getScreen() instanceof Template) {
+			return ((Template) getScreen()).getX();
+		}
+
+		return Gdx.input.getX();
+	}
+
+	public int getY() {
+		if(getScreen() != null && getScreen() instanceof Template) {
+			return ((Template) getScreen()).getY();
+		}
+
+		return Gdx.input.getY();
 	}
 }

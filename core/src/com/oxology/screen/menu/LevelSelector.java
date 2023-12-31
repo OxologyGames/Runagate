@@ -43,23 +43,10 @@ public class LevelSelector extends Template {
             } catch(IllegalArgumentException ignored) {}
         }
 
-        font = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
-        font.setColor(1, 1, 1, 1);
-        font.getData().scaleX = Runagate.MENU_FONT_SCALE;
-        font.getData().scaleY = Runagate.MENU_FONT_SCALE;
-
-        this.playBtn = new Button(16, 195, 2, "", font, new Button.Action() {
-            @Override
-            public void onAction() {
-                playWorld();
-            }
-        }, this);
-        this.backBtn = new Button(332, 189, 0, "Back", font, new Button.Action() {
-            @Override
-            public void onAction() {
-                backToMenu();
-            }
-        }, this);
+        font = Runagate.getInstance().getTextureManager().getBitmapFont(48, 12);
+        font.setColor(0, 0, 0, 1);
+        this.playBtn = new Button(16, 800, 50, 50, ">", font, this::playWorld);
+        this.backBtn = new Button(332, 300, 250, 50, "Back", font, this::backToMenu);
 
         this.index = 0;
     }
@@ -84,16 +71,16 @@ public class LevelSelector extends Template {
         batch.setProjectionMatrix(this.camera.combined);
         this.camera.update();
 
-        if(216-getY() > 15 && 216-getY() < 216) {
-            index = Math.min((217-getY())/12, worlds.size());
-        }
+        //if(216-getY() > 15 && 216-getY() < 1000) {
+            index = 3;//Math.min((1000-getY())/48, worlds.size());
+        //}
 
-        playBtn.setY(217-(10+index*12));
+        playBtn.setY(1000-(40+index*48));
 
         if(index > 0)
-            playBtn.update();
+            playBtn.update(deltaTime);
 
-        backBtn.update();
+        backBtn.update(deltaTime);
     }
 
     private void backToMenu() {

@@ -25,6 +25,8 @@ public class Player extends Entity {
             move(UP);
         } else if(Gdx.input.isKeyPressed(Input.Keys.S)) {
             move(DOWN);
+        } else {
+            move(NONE);
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE))

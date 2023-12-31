@@ -41,7 +41,7 @@ public class Template implements Screen {
 
         this.fadeOut = fadeOut;
 
-        batch.setColor(visibility, visibility, visibility, 1);
+        batch.setColor(1, 1, 1, visibility);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class Template implements Screen {
                     }
                     break;
             }
-            batch.setColor(visibility, visibility, visibility, 1);
+            batch.setColor(1, 1, 1, visibility);
 
             if(!fadeOut && stage == AFTER_FADE_IN)
                 fading = false;

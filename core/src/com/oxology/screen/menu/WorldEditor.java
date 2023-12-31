@@ -2,7 +2,6 @@ package com.oxology.screen.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -52,22 +51,10 @@ public class WorldEditor extends Template {
         this.cursorX = 3;
         this.cursorY = 3;
 
-        BitmapFont font = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
-        font.setColor(Color.WHITE);
-        font.getData().scaleX = .09f;
-        font.getData().scaleY = .09f;
-        this.saveBtn = new Button(332, 189, 0, "Save", font, new Button.Action() {
-            @Override
-            public void onAction() {
-                saveWorld();
-            }
-        }, this);
-        this.backBtn = new Button(332, 177, 0, "Back", font, new Button.Action() {
-            @Override
-            public void onAction() {
-                goBack();
-            }
-        }, this);
+        BitmapFont font = Runagate.getInstance().getTextureManager().getBitmapFont(48, 12);
+        font.setColor(0, 0, 0, 1);
+        this.saveBtn = new Button(332, 500, 250, 50, "SAVE", font, this::saveWorld);
+        this.backBtn = new Button(332, 177, 250, 50, "BACK", font, this::goBack);
     }
 
     @Override
@@ -85,9 +72,12 @@ public class WorldEditor extends Template {
             levelBatch.draw(cursor/*level.getSnippet()*/, 9+level.getX()*48, 18+level.getY()*27, 48, 27);
         }
 
-        saveBtn.draw(levelBatch);
-        backBtn.draw(levelBatch);
         levelBatch.end();
+
+        batch.begin();
+        saveBtn.draw(batch);
+        backBtn.draw(batch);
+        batch.end();
     }
 
     public void update(float deltaTime) {
@@ -118,8 +108,8 @@ public class WorldEditor extends Template {
             goToLevel();
         }
 
-        saveBtn.update();
-        backBtn.update();
+        saveBtn.update(deltaTime);
+        backBtn.update(deltaTime);
     }
 
     public void saveLevel(Level level) {
@@ -181,13 +171,13 @@ public class WorldEditor extends Template {
 
     @Override
     public int getX() {
-        float prop = (float) Gdx.graphics.getWidth() / 384;
+        float prop = (float) Gdx.graphics.getWidth() / Runagate.MENU_WIDTH;
         return (int) (Gdx.input.getX() / prop);
     }
 
     @Override
     public int getY() {
-        float prop = (float) Gdx.graphics.getHeight() / 216;
+        float prop = (float) Gdx.graphics.getHeight() / Runagate.MENU_HEIGHT;
         return (int) ((Gdx.graphics.getHeight()-Gdx.input.getY()) / prop);
     }
 }
