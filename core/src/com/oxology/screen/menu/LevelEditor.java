@@ -62,13 +62,11 @@ public class LevelEditor extends Template {
 
         this.cursor = new Texture("level/cursor.png");
 
-        BitmapFont font = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
-        font.setColor(Color.WHITE);
-        font.getData().scaleX = Runagate.MENU_FONT_SCALE;
-        font.getData().scaleY = Runagate.MENU_FONT_SCALE;
-//        this.saveBtn = new Button(332, 189, 0, "Save", font, this::saveLevel, this);
-//        this.backBtn = new Button(332, 177, 0, "Back", font, this::backToWorld, this);
-//        this.modeBtn = new Button(332, 165, 0, "Wall", font, this::changeMode, this);
+        BitmapFont font = Runagate.getInstance().getAssetManager().getBitmapFont(48, 12);
+        font.setColor(0, 0, 0, 1);
+        this.saveBtn = new Button(40, 1350, 250, 50, "Save", font, this::saveLevel);
+        this.backBtn = new Button(40, 1290, 250, 50, "Back", font, this::backToWorld);
+        this.modeBtn = new Button(40, 1230, 250, 50, "Wall", font, this::changeMode);
 
         this.mode = 0;
     }

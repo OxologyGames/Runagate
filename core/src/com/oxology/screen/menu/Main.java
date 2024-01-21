@@ -1,16 +1,21 @@
 package com.oxology.screen.menu;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.oxology.Runagate;
 import com.oxology.menu.Button;
+import com.oxology.menu.TextInput;
 import com.oxology.screen.Template;
 
 public class Main extends Template {
     private final Button playBtn;
     private final Button worldBtn;
     private final Button exitBtn;
+
+    //private final TextInput textInput;
 
     private final BitmapFont version;
 
@@ -23,14 +28,16 @@ public class Main extends Template {
         menuCamera.translate(Runagate.MENU_WIDTH/2f, Runagate.MENU_HEIGHT/2f);
         menuCamera.update();
 
-        version = Runagate.getInstance().getTextureManager().getBitmapFont(24, 6);
+        version = Runagate.getInstance().getAssetManager().getBitmapFont(24, 6);
         version.setColor(1, 1, 1, 1);
 
-        BitmapFont font = Runagate.getInstance().getTextureManager().getBitmapFont(64, 16);
+        BitmapFont font = Runagate.getInstance().getAssetManager().getBitmapFont(64, 16);
         font.setColor(0, 0, 0, 1);
         playBtn = new Button(Runagate.MENU_WIDTH/2f - 720/2f, 700, 720, 128, "PLAY", font, this::goToLevelSelector);
         worldBtn = new Button(Runagate.MENU_WIDTH/2f - 720/2f, 550, 720, 128, "EDIT", font, this::goToLevelEditor);
         exitBtn = new Button(Runagate.MENU_WIDTH/2f - 720/2f, 400, 720, 128, "EXIT", font, Gdx.app::exit);
+
+        //textInput = new TextInput(Runagate.MENU_WIDTH/2f - 720/2f, 200, 720, 128, font);
 
         setFading(true);
     }
@@ -40,11 +47,14 @@ public class Main extends Template {
         update(deltaTime);
 
         batch.begin();
-        batch.draw(Runagate.getInstance().getTextureManager().logo, (Runagate.MENU_WIDTH/2f)-(1500/2f), 925);
+        batch.draw(new Texture("menu.png"), 0, 0);
+        batch.draw(Runagate.getInstance().getAssetManager().logo, (Runagate.MENU_WIDTH/2f)-(1500/2f), 925);
 
         playBtn.draw(batch);
         exitBtn.draw(batch);
         worldBtn.draw(batch);
+
+        //textInput.draw(batch);
 
         version.draw(batch, "Version: " + Runagate.VERSION, 5, 25);
         batch.end();
@@ -59,6 +69,8 @@ public class Main extends Template {
         playBtn.update(delta);
         worldBtn.update(delta);
         exitBtn.update(delta);
+
+        //textInput.update(delta);
 
         version.setColor(1, 1, 1, batch.getColor().a);
     }

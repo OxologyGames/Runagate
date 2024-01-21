@@ -43,7 +43,7 @@ public class LevelSelector extends Template {
             } catch(IllegalArgumentException ignored) {}
         }
 
-        font = Runagate.getInstance().getTextureManager().getBitmapFont(48, 12);
+        font = Runagate.getInstance().getAssetManager().getBitmapFont(48, 12);
         font.setColor(0, 0, 0, 1);
         this.playBtn = new Button(16, 800, 50, 50, ">", font, this::playWorld);
         this.backBtn = new Button(332, 300, 250, 50, "Back", font, this::backToMenu);
@@ -72,7 +72,7 @@ public class LevelSelector extends Template {
         this.camera.update();
 
         //if(216-getY() > 15 && 216-getY() < 1000) {
-            index = 3;//Math.min((1000-getY())/48, worlds.size());
+            index = 1;//Math.min((1000-getY())/48, worlds.size());
         //}
 
         playBtn.setY(1000-(40+index*48));
@@ -89,7 +89,6 @@ public class LevelSelector extends Template {
 
     private void playWorld() {
         UUID world = worlds.get(index-1);
-
         List<Level> levels = new ArrayList<>();
         File worldFolder = new File(worldsFolder, world.toString());
         for(File levelFile : worldFolder.listFiles()) {

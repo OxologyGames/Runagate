@@ -61,7 +61,7 @@ public class Runagate extends com.badlogic.gdx.Game {
 		return instance;
 	}
 
-	public AssetManager getTextureManager() {
+	public AssetManager getAssetManager() {
 		if(assetManager == null)
 			assetManager = new AssetManager();
 

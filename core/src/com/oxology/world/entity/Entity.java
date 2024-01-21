@@ -15,16 +15,16 @@ public class Entity extends GameObject {
     protected static final int UP = 3;
     protected static final int DOWN = 4;
 
-    private static final float ACCELERATION_SPEED = 5.0f;
-    private static final float ACCELERATION_AIR_SPEED = 3.5f;
+    private static final float ACCELERATION_SPEED = 7.0f;
+    private static final float ACCELERATION_AIR_SPEED = 4.5f;
     private static final float DECELERATION_SPEED = 0.8f;
-    private static final float DECELERATION_AIR_SPEED = 0.02f;
+    private static final float DECELERATION_AIR_SPEED = 0.04f;
 
     private static final float JUMP_SPEED = 8.0f;
     private static final float CHAIN_SPEED = 5.0f;
 
+    protected final boolean[] colliders;
     private float xSpeed, ySpeed;
-    protected boolean[] colliders;
     private boolean onChain;
     private boolean jumpedOnChain;
     private boolean jumpedOffChain;
@@ -156,10 +156,10 @@ public class Entity extends GameObject {
                 tiles[(int) (getNextX(deltaTime) + 1.0f)][getNextY(deltaTime) % 1 == 0 ? (int) Math.floor(getNextY(deltaTime)) : (int) Math.floor(getNextY(deltaTime)+1)] == Tile.CHAIN &&
                         Math.abs((getNextX(deltaTime) - 1) - (float) Math.floor(getNextX(deltaTime)) + 0.5f) < 0.05f;
 
-        setCollider(collider0, 0);
-        setCollider(collider1, 1);
-        setCollider(collider2, 2);
-        setCollider(collider3, 3);
+        colliders[0] = collider0;
+        colliders[1] = collider1;
+        colliders[2] = collider2;
+        colliders[3] = collider3;
         onChain(onChain);
     }
 
@@ -180,5 +180,13 @@ public class Entity extends GameObject {
 
     private float getNextY(float deltaTime) {
         return y + (ySpeed * deltaTime);
+    }
+
+    protected float getXSpeed() {
+        return xSpeed;
+    }
+
+    protected float getYSpeed() {
+        return ySpeed;
     }
 }

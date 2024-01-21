@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class WorldEditor extends Template {
+    private static final int ADD_MODE = 0;
+    private static final int DELETE_MODE = 1;
+
     private OrthographicCamera levelCamera;
     private SpriteBatch levelBatch;
     private List<Level> levels;
@@ -29,8 +32,11 @@ public class WorldEditor extends Template {
     private Texture addCursor;
     private int cursorX, cursorY;
 
+    private int mode;
+
     private Button saveBtn;
     private Button backBtn;
+    private Button modeBtn;
 
     public WorldEditor() {
         super();
@@ -51,32 +57,37 @@ public class WorldEditor extends Template {
         this.cursorX = 3;
         this.cursorY = 3;
 
-        BitmapFont font = Runagate.getInstance().getTextureManager().getBitmapFont(48, 12);
+        BitmapFont font = Runagate.getInstance().getAssetManager().getBitmapFont(48, 12);
         font.setColor(0, 0, 0, 1);
-        this.saveBtn = new Button(332, 500, 250, 50, "SAVE", font, this::saveWorld);
-        this.backBtn = new Button(332, 177, 250, 50, "BACK", font, this::goBack);
+        this.saveBtn = new Button(40, 1350, 250, 50, "SAVE", font, this::saveWorld);
+        this.backBtn = new Button(40, 1290, 250, 50, "BACK", font, this::goBack);
+        this.modeBtn = new Button(40, 1230, 250, 50, mode == ADD_MODE ? "ADD" : "DELETE", font, this::changeMode);
     }
 
     @Override
     public void render(float deltaTime) {
         update(deltaTime);
         levelBatch.begin();
-        levelBatch.draw(border, 8, 17);
+//        levelBatch.draw(border, 8, 17);
+//
+//        if(getLevel(cursorX, cursorY) != null)
+//            levelBatch.draw(cursor, 9+cursorX*48, 18+cursorY*27);
+//        else
+//            levelBatch.draw(addCursor, 9+cursorX*48, 18+cursorY*27);
 
-        if(getLevel(cursorX, cursorY) != null)
-            levelBatch.draw(cursor, 9+cursorX*48, 18+cursorY*27);
-        else
-            levelBatch.draw(addCursor, 9+cursorX*48, 18+cursorY*27);
-
-        for(Level level : levels) {
-            levelBatch.draw(cursor/*level.getSnippet()*/, 9+level.getX()*48, 18+level.getY()*27, 48, 27);
-        }
 
         levelBatch.end();
 
         batch.begin();
+        batch.draw(Runagate.getInstance().getAssetManager().pixelGray, 330, 40, 2190, 1360);
+        batch.draw(Runagate.getInstance().getAssetManager().worldMesh, 330, 40, 2190, 1360);
+
+        for(Level level : levels) {
+            batch.draw(level.getSnippet(), 9+level.getX()*48, 18+level.getY()*27, 320, 180);
+        }
         saveBtn.draw(batch);
         backBtn.draw(batch);
+        modeBtn.draw(batch);
         batch.end();
     }
 
@@ -110,6 +121,7 @@ public class WorldEditor extends Template {
 
         saveBtn.update(deltaTime);
         backBtn.update(deltaTime);
+        modeBtn.update(deltaTime);
     }
 
     public void saveLevel(Level level) {
@@ -167,6 +179,11 @@ public class WorldEditor extends Template {
         }
 
         return null;
+    }
+
+    private void changeMode() {
+        mode = mode == ADD_MODE ? DELETE_MODE : ADD_MODE;
+        modeBtn.setText(mode == ADD_MODE ? "ADD" : "DELETE");
     }
 
     @Override

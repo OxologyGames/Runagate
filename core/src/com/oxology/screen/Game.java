@@ -3,6 +3,7 @@ package com.oxology.screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.oxology.Runagate;
 import com.oxology.world.GameObject;
 import com.oxology.world.Level;
@@ -16,6 +17,8 @@ public class Game extends Template {
     private SpriteBatch levelBatch;
     private List<Level> levels;
 
+    private Box2DDebugRenderer debugRenderer;
+
 
     //temp
     private Texture wall;
@@ -28,9 +31,12 @@ public class Game extends Template {
         levelCamera.translate(320/2f, 180/2f);
         levelCamera.update();
 
+        debugRenderer = new Box2DDebugRenderer();
+
         levelBatch = new SpriteBatch();
 
         this.levels = levels;
+        levels.get(0).generateWorld();
         if(levels.get(0).getPlayer() == null)
             levels.get(0).setPlayer(new Player(4, 6));
 
@@ -55,6 +61,8 @@ public class Game extends Template {
         levels.get(0).getPlayer().draw(levelBatch);
         //levelBatch.draw(new Texture("level.png"), 0, 0);
         levelBatch.end();
+
+        levels.get(0).draw(camera, debugRenderer);
 
         batch.begin();
         batch.end();
