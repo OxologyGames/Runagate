@@ -68,7 +68,7 @@ public class Level implements Serializable {
     private void createPlayer() {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(3*32+16, 5*32+16); // Początkowa pozycja gracza
+        bodyDef.position.set(3*32+16, 5*32+16);
 
         playerBody = world.createBody(bodyDef);
 
@@ -105,31 +105,27 @@ public class Level implements Serializable {
 
     public void generateSnippet() {
         SpriteBatch batch = new SpriteBatch();
-        OrthographicCamera camera = new OrthographicCamera(360, 220);
-        camera.translate(360/2f, 220/2f);
+        OrthographicCamera camera = new OrthographicCamera(2560, 1440);
+        camera.translate(2560/2f, 1440/2f);
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
 
-        Texture airTexture = new Texture("level/air.png");
         Texture wallTexture = new Texture("level/wall.png");
 
-        FrameBuffer frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 360, 220, false);
+        FrameBuffer frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, 384, 216, false);
 
         frameBuffer.begin();
         batch.begin();
-        for(int i = 0; i < 40; i++) {
-            for(int j = 0; j < 30; j++) {
-                Texture texture = airTexture;
-                if(tiles[i][j] == Tile.WALL) texture = wallTexture;
-                batch.draw(texture, i*(8/0.888f), j*(6/0.888f), (8/0.888f), (6/0.888f));
+        for(int i = 0; i < 80; i++) {
+            for(int j = 0; j < 45; j++) {
+                if(tiles[i][j] == Tile.WALL)
+                    batch.draw(wallTexture, i*32, j*32, 32, 32);
             }
         }
         batch.end();
         frameBuffer.end();
 
-        TextureRegion region = new TextureRegion(frameBuffer.getColorBufferTexture());
-        region.flip(true, true);
         snippet = frameBuffer.getColorBufferTexture();
     }
 

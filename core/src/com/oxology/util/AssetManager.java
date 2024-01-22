@@ -13,6 +13,9 @@ public class AssetManager {
     public Texture pixel;
     public Texture pixelGray;
     public Texture worldMesh;
+    public Texture levelMesh;
+    public Texture levelAdd;
+    public Texture levelDelete;
 
     public Texture playerIdle;
     public Texture playerWalk;
@@ -23,11 +26,14 @@ public class AssetManager {
     public AssetManager() {
         generator = new FreeTypeFontGenerator(Gdx.files.internal("font/bahnschrift.ttf"));
 
-        splash = new Texture("splash.png");
-        logo = new Texture("logo.png");
-        pixel = new Texture("pixel.png");
-        pixelGray = new Texture("pixelGray.png");
-        worldMesh = new Texture("worldMesh.png");
+        splash = new Texture("menu/splash.png");
+        logo = new Texture("menu/main/logo.png");
+        pixel = new Texture("menu/pixel.png");
+        pixelGray = new Texture("menu/pixelGray.png");
+        worldMesh = new Texture("menu/world/mesh.png");
+        levelMesh = new Texture("menu/level/mesh.png");
+        levelAdd = new Texture("menu/world/levelAdd.png");
+        levelDelete = new Texture("menu/world/levelDelete.png");
 
         playerIdle = new Texture("entity/player/idle.png");
         playerWalk = new Texture("entity/player/walk.png");

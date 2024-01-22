@@ -31,6 +31,7 @@ public class LevelEditor extends Template {
     private Button modeBtn;
 
     private boolean editable;
+    private boolean grid;
 
     private int mode;
     // 0 - Wall
@@ -59,6 +60,7 @@ public class LevelEditor extends Template {
         this.chainTexture = new Texture("level/chain.png");
 
         this.editable = false;
+        this.grid = true;
 
         this.cursor = new Texture("level/cursor.png");
 
@@ -74,41 +76,27 @@ public class LevelEditor extends Template {
     @Override
     public void render(float deltaTime) {
         update(deltaTime);
-        levelBatch.begin();
-        levelBatch.draw(border, 8, 17);
 
-        for(int i = 0; i < 40; i++) {
-            for(int j = 0; j < 30; j++) {
-                Texture texture = airTexture;
-                if(level.getTiles()[i][j] == Tile.WALL) texture = wallTexture;
-                if(level.getTiles()[i][j] == Tile.CHAIN) texture = chainTexture;
-                levelBatch.draw(texture, 9+i*8, 18+j*6);
+        batch.begin();
+        for(int i = 0; i < 80; i++) {
+            for(int j = 0; j < 45; j++) {
+                if(level.getTiles()[i][j] == Tile.WALL)
+                    batch.draw(wallTexture, i*32, j*32, 32, 32);
             }
         }
 
-        levelBatch.draw(cursor, 9+cursorX*8, 18+cursorY*6);
-        saveBtn.draw(levelBatch);
-        backBtn.draw(levelBatch);
-        modeBtn.draw(levelBatch);
+        if(grid)
+            batch.draw(Runagate.getInstance().getAssetManager().levelMesh, 0, 0, 2560, 1440);
 
-        levelBatch.end();
+        saveBtn.draw(batch);
+        backBtn.draw(batch);
+        modeBtn.draw(batch);
+        batch.end();
     }
 
     public void update(float deltaTime) {
         levelCamera.update();
         levelBatch.setProjectionMatrix(levelCamera.combined);
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.UP) && cursorY < 29) {
-            cursorY++;
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && cursorY > 0) {
-            cursorY--;
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && cursorX < 39) {
-            cursorX++;
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && cursorX > 0) {
-            cursorX--;
-        }
 
         if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
@@ -128,25 +116,25 @@ public class LevelEditor extends Template {
             }
         }
 
-        if(getX() > 8 && getX() < 328 && getY() > 17 && getY() < 197) {
-            cursorX = (getX()-9)/8;
-            cursorY = (getY()-18)/6;
+        if(Gdx.input.isKeyJustPressed(Input.Keys.G)) {
+            grid = !grid;
+        }
 
-            if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && editable) {
-                switch (mode) {
-                    case 0:
-                        level.getTiles()[cursorX][cursorY] = Tile.WALL;
-                        break;
-                    case 1:
-                        level.getTiles()[cursorX][cursorY] = Tile.AIR;
-                        break;
-                    case 2:
-                        level.getTiles()[cursorX][cursorY] = Tile.CHAIN;
-                        break;
-                }
+        cursorX = getX()/32;
+        cursorY = getY()/32;
+
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            switch (mode) {
+                case 0:
+                    level.getTiles()[cursorX][cursorY] = Tile.WALL;
+                    break;
+                case 1:
+                    level.getTiles()[cursorX][cursorY] = Tile.AIR;
+                    break;
+                case 2:
+                    level.getTiles()[cursorX][cursorY] = Tile.CHAIN;
+                    break;
             }
-
-            if(!Gdx.input.isButtonPressed(Input.Buttons.LEFT)) editable = true;
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
