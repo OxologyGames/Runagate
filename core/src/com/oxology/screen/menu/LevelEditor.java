@@ -88,6 +88,8 @@ public class LevelEditor extends Template {
         if(grid)
             batch.draw(Runagate.getInstance().getAssetManager().levelMesh, 0, 0, 2560, 1440);
 
+        batch.draw(Runagate.getInstance().getAssetManager().cursor, cursorX*32, cursorY*32, 32, 32);
+
         saveBtn.draw(batch);
         backBtn.draw(batch);
         modeBtn.draw(batch);
@@ -120,8 +122,8 @@ public class LevelEditor extends Template {
             grid = !grid;
         }
 
-        cursorX = getX()/32;
-        cursorY = getY()/32;
+        cursorX = Math.min(getX()/32, 79);
+        cursorY = Math.min(getY()/32, 44);
 
         if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             switch (mode) {

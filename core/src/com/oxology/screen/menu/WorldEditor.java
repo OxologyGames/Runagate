@@ -71,7 +71,6 @@ public class WorldEditor extends Template {
             cursorX = (mouseX < 0 ? mouseX-384 : mouseX)/384;
             int mouseY = (getY()-(1360-40)/2)+26;
             cursorY = (mouseY < 0 ? mouseY-216 : mouseY)/216;
-            System.out.println(cursorX + ", " + cursorY);
 
             if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))
                 goToLevel();
