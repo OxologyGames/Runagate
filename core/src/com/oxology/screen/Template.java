@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
 
-public class Template implements Screen {
+public abstract class Template implements Screen {
     public static final int BEFORE_FADE_IN = 0;
     public static final int FADE_IN = 1;
     public static final int AFTER_FADE_IN = 2;

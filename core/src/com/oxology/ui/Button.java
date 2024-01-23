@@ -1,4 +1,4 @@
-package com.oxology.menu;
+package com.oxology.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
 
-public class TextInput {
+public class Button {
     private float x, y;
     private float width, heigth;
     private float maxWidth, currentWidth;
@@ -16,7 +16,13 @@ public class TextInput {
     private BitmapFont font;
     private GlyphLayout textLayout;
 
-    public TextInput(float x, float y, int width, int height, BitmapFont font) {
+    private Action click;
+
+    public interface Action {
+        void onAction();
+    };
+
+    public Button(float x, float y, int width, int height, String text, BitmapFont font, Action click) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -24,8 +30,9 @@ public class TextInput {
         this.maxWidth = width + 20;
         this.currentWidth = width;
 
-        this.text = "";
+        this.text = text;
         this.font = font;
+        this.click = click;
 
         this.textLayout = new GlyphLayout(font, text);
     }
@@ -36,30 +43,29 @@ public class TextInput {
     }
 
     public void update(float delta) {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
-            for(int i = 29; i <= 54; i++) {
-                if(Gdx.input.isKeyJustPressed(i)) {
-                    text += Input.Keys.toString(i);
-                    textLayout = new GlyphLayout(font, text);
-                }
+        if((Runagate.getInstance().getX() >= x && Runagate.getInstance().getX() < x + width) &&
+                        (Runagate.getInstance().getY() >= y && Runagate.getInstance().getY() < y + heigth)) {
+            if(currentWidth + 150*delta < maxWidth) {
+                currentWidth += 150*delta;
+            } else {
+                currentWidth = maxWidth;
             }
 
-            if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-                text += " ";
-                textLayout = new GlyphLayout(font, text);
+            if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+                click.onAction();
             }
-
-            if(Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE)) {
-                if(!text.isEmpty()) {
-                    text = text.substring(0, text.length()-1);
-                    textLayout = new GlyphLayout(font, text);
-                }
+        } else {
+            if(currentWidth - 150*delta > width) {
+                currentWidth -= 150*delta;
+            } else {
+                currentWidth = width;
             }
         }
     }
 
     public void setText(String text) {
         this.text = text;
+        this.textLayout = new GlyphLayout(font, text);
     }
 
     public void setWidth(float width) {

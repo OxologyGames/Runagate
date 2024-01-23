@@ -14,6 +14,7 @@ public class AssetManager {
     public Texture pixelGray;
 
     public Texture cursor;
+    public Texture toggle;
     public Texture worldMesh;
     public Texture levelMesh;
     public Texture levelAdd;
@@ -34,6 +35,7 @@ public class AssetManager {
         pixelGray = new Texture("menu/pixelGray.png");
 
         cursor = new Texture("menu/level/cursor.png");
+        toggle = new Texture("menu/toggle.png");
         worldMesh = new Texture("menu/world/mesh.png");
         levelMesh = new Texture("menu/level/mesh.png");
         levelAdd = new Texture("menu/world/levelAdd.png");

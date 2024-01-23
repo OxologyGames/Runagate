@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.oxology.Runagate;
-import com.oxology.menu.Button;
+import com.oxology.ui.Button;
 import com.oxology.screen.Game;
 import com.oxology.screen.Template;
 import com.oxology.world.Level;

@@ -2,14 +2,14 @@ package com.oxology.screen.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
-import com.oxology.menu.Button;
+import com.oxology.ui.Button;
+import com.oxology.ui.Toggle;
 import com.oxology.screen.Template;
 import com.oxology.world.Level;
 import com.oxology.world.Tile;
@@ -29,6 +29,8 @@ public class LevelEditor extends Template {
     private Button saveBtn;
     private Button backBtn;
     private Button modeBtn;
+
+    private Toggle toggle;
 
     private boolean editable;
     private boolean grid;
@@ -70,6 +72,8 @@ public class LevelEditor extends Template {
         this.backBtn = new Button(40, 1290, 250, 50, "Back", font, this::backToWorld);
         this.modeBtn = new Button(40, 1230, 250, 50, "Wall", font, this::changeMode);
 
+        this.toggle = new Toggle(250, 860);
+
         this.mode = 0;
     }
 
@@ -93,6 +97,8 @@ public class LevelEditor extends Template {
         saveBtn.draw(batch);
         backBtn.draw(batch);
         modeBtn.draw(batch);
+
+        toggle.draw(batch);
         batch.end();
     }
 
@@ -149,6 +155,8 @@ public class LevelEditor extends Template {
         saveBtn.update(deltaTime);
         backBtn.update(deltaTime);
         modeBtn.update(deltaTime);
+
+        toggle.update(deltaTime);
     }
 
     private void changeMode() {
