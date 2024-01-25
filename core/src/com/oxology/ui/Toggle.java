@@ -5,12 +5,11 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
 
-public class Toggle {
-    private float x, y;
+public class Toggle extends UIElement {
     private float oldX, oldY;
     private float holdX, holdY;
-    private boolean holding;
-    private boolean held;
+    private boolean holding, held;
+    private boolean heldBefore;
 
     public Toggle(float x, float y) {
         this.x = x;
@@ -19,13 +18,19 @@ public class Toggle {
         held = false;
     }
 
+    @Override
     public void draw(SpriteBatch batch) {
         batch.draw(Runagate.getInstance().getAssetManager().toggle, x, y, 64, 64);
     }
 
+    @Override
     public void update(float delta) {
         if(Math.sqrt(Math.pow(Runagate.getInstance().getX() - (x + 32), 2) + Math.pow(Runagate.getInstance().getY() - (y + 32), 2)) <= 32) {
-            holding = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+            if(!heldBefore) {
+                holding = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+            }
+        } else {
+            heldBefore = Gdx.input.isButtonPressed(Input.Buttons.LEFT);
         }
 
         if(!Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {

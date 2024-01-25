@@ -7,8 +7,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
 
-public class TextInput {
-    private float x, y;
+public class TextInput extends UIElement {
     private float width, heigth;
     private float maxWidth, currentWidth;
 
@@ -30,11 +29,13 @@ public class TextInput {
         this.textLayout = new GlyphLayout(font, text);
     }
 
+    @Override
     public void draw(SpriteBatch batch) {
         batch.draw(Runagate.getInstance().getAssetManager().pixel, x - (currentWidth-width)/2f, y, currentWidth, heigth);
         font.draw(batch, text, x + (width/2f) - (textLayout.width/2f), (y + textLayout.height) + (heigth/2f) - (textLayout.height/2f));
     }
 
+    @Override
     public void update(float delta) {
         if(Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY)) {
             for(int i = 29; i <= 54; i++) {
