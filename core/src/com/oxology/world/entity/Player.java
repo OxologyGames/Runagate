@@ -100,9 +100,6 @@ public class Player extends Entity {
         if(direction == 1 && !currentFrame.isFlipX())
             currentFrame.flip(true, false);
 
-        System.out.println(getYSpeed()
-        );
-
         batch.draw(currentFrame, x*8, y*6);
     }
 

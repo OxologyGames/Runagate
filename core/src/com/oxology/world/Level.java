@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -27,7 +26,7 @@ public class Level implements Serializable {
     private transient Texture snippet;
     private List<GameObject> gameObjects;
     private transient Player player;
-    private Body playerBody;
+    private transient Body playerBody;
 
     public Level(int x, int y) {
         tiles = new Tile[80][45];
@@ -38,10 +37,6 @@ public class Level implements Serializable {
         for(int i = 0; i < 80; i++) {
             for(int j = 0; j < 45; j++) {
                 tiles[i][j] = Tile.AIR;
-
-                if(i == 4 && j == 5) {
-                    generatePlatform(j * 32, i * 32);
-                }
             }
         }
 
@@ -56,7 +51,7 @@ public class Level implements Serializable {
 
         for(int i = 0; i < 80; i++) {
             for(int j = 0; j < 45; j++) {
-                if(i >= 40 || tiles[i][j] == Tile.WALL) {
+                if(tiles[i][j] == Tile.WALL) {
                     generatePlatform(i * 32, j * 32);
                 }
             }

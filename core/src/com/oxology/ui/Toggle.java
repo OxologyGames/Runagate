@@ -11,9 +11,16 @@ public class Toggle extends UIElement {
     private boolean holding, held;
     private boolean heldBefore;
 
-    public Toggle(float x, float y) {
+    private Action click;
+
+    public interface Action {
+        void onAction();
+    };
+
+    public Toggle(float x, float y, Action click) {
         this.x = x;
         this.y = y;
+        this.click = click;
 
         held = false;
     }
@@ -36,7 +43,7 @@ public class Toggle extends UIElement {
         if(!Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             holding = false;
             if(oldX == x && oldY == y && held) {
-                System.out.println("HA");
+                click.onAction();
             }
         }
 
@@ -60,5 +67,9 @@ public class Toggle extends UIElement {
             x = newX > 0 ? Math.min(newX, 2560-64) : Math.max(newX, 0);
             y = newY > 0 ? Math.min(newY, 1440-64) : Math.max(newY, 0);
         }
+    }
+
+    public boolean isHolding() {
+        return holding;
     }
 }

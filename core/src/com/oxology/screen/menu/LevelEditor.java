@@ -5,10 +5,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
 import com.oxology.ui.Button;
+import com.oxology.ui.Panel;
 import com.oxology.ui.Toggle;
 import com.oxology.screen.Template;
 import com.oxology.world.Level;
@@ -19,20 +19,14 @@ public class LevelEditor extends Template {
     private SpriteBatch levelBatch;
     private Level level;
 
-    private Texture border;
-
-    private Texture airTexture, wallTexture;
-    private Texture cursor;
-    private Texture chainTexture;
+    private Texture wallTexture;
     private int cursorX, cursorY;
 
-    private Button saveBtn;
-    private Button backBtn;
+    private Panel panel;
+    private Toggle toggle;
     private Button modeBtn;
 
-    private Toggle toggle;
-
-    private boolean editable;
+    private boolean editFreeze;
     private boolean grid;
 
     private int mode;
@@ -55,24 +49,24 @@ public class LevelEditor extends Template {
 
         this.level = level;
 
-        this.border = new Texture("level/levelBorder.png");
-
-        this.airTexture = new Texture("level/air.png");
         this.wallTexture = new Texture("level/wall.png");
-        this.chainTexture = new Texture("level/chain.png");
 
-        this.editable = false;
+        this.editFreeze = true;
         this.grid = true;
 
-        this.cursor = new Texture("level/cursor.png");
+        this.panel = new Panel(0, 0, 330);
 
         BitmapFont font = Runagate.getInstance().getAssetManager().getBitmapFont(48, 12);
         font.setColor(0, 0, 0, 1);
-        this.saveBtn = new Button(40, 1350, 250, 50, "Save", font, this::saveLevel);
-        this.backBtn = new Button(40, 1290, 250, 50, "Back", font, this::backToWorld);
-        this.modeBtn = new Button(40, 1230, 250, 50, "Wall", font, this::changeMode);
+        Button saveBtn = new Button(40, 1350, 250, 50, "SAVE", font, this::saveLevel);
+        Button backBtn = new Button(40, 1290, 250, 50, "BACK", font, this::backToWorld);
+        modeBtn = new Button(40, 1230, 250, 50, "WALL", font, this::changeMode);
 
-        this.toggle = new Toggle(250, 860);
+        this.panel.addElement(saveBtn);
+        this.panel.addElement(backBtn);
+        this.panel.addElement(modeBtn);
+
+        this.toggle = new Toggle(2560-128, 64, this::togglePanel);
 
         this.mode = 0;
     }
@@ -94,9 +88,7 @@ public class LevelEditor extends Template {
 
         batch.draw(Runagate.getInstance().getAssetManager().cursor, cursorX*32, cursorY*32, 32, 32);
 
-        saveBtn.draw(batch);
-        backBtn.draw(batch);
-        modeBtn.draw(batch);
+        panel.draw(batch);
 
         toggle.draw(batch);
         batch.end();
@@ -131,18 +123,26 @@ public class LevelEditor extends Template {
         cursorX = Math.min(getX()/32, 79);
         cursorY = Math.min(getY()/32, 44);
 
+        panel.update(deltaTime);
+
+        toggle.update(deltaTime);
+
         if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            switch (mode) {
-                case 0:
-                    level.getTiles()[cursorX][cursorY] = Tile.WALL;
-                    break;
-                case 1:
-                    level.getTiles()[cursorX][cursorY] = Tile.AIR;
-                    break;
-                case 2:
-                    level.getTiles()[cursorX][cursorY] = Tile.CHAIN;
-                    break;
+            if(!toggle.isHolding() && !editFreeze) {
+                switch (mode) {
+                    case 0:
+                        level.getTiles()[cursorX][cursorY] = Tile.WALL;
+                        break;
+                    case 1:
+                        level.getTiles()[cursorX][cursorY] = Tile.AIR;
+                        break;
+                    case 2:
+                        level.getTiles()[cursorX][cursorY] = Tile.CHAIN;
+                        break;
+                }
             }
+        } else {
+            editFreeze = false;
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
@@ -151,31 +151,28 @@ public class LevelEditor extends Template {
             else
                 level.getTiles()[cursorX][cursorY] = Tile.AIR;
         }
-
-        saveBtn.update(deltaTime);
-        backBtn.update(deltaTime);
-        modeBtn.update(deltaTime);
-
-        toggle.update(deltaTime);
     }
 
     private void changeMode() {
         mode++;
         if(mode > 2) mode = 0;
 
-        String text = "Wall";
+        String text = "WALL";
         switch (mode) {
             case 1:
-                text = "Air";
+                text = "AIR";
                 break;
             case 2:
-                text = "Chain";
+                text = "CHAIN";
                 break;
         }
 
-        modeBtn.setText(text);
-        GlyphLayout layout = new GlyphLayout(modeBtn.getFont(), modeBtn.getText());
-        modeBtn.setWidth(layout.width);
+        Button button = (Button) panel.getElement(modeBtn);
+        button.setText(text);
+    }
+
+    private void togglePanel() {
+        panel.toggle();
     }
 
     private void saveLevel() {

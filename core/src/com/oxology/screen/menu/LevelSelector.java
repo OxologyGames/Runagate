@@ -22,9 +22,12 @@ public class LevelSelector extends Template {
     private Button backBtn;
     private int index;
     private File worldsFolder;
+    private boolean toPlay;
 
-    public LevelSelector() {
+    public LevelSelector(boolean toPlay) {
         super();
+
+        this.toPlay = toPlay;
 
         this.camera = new OrthographicCamera(Runagate.MENU_WIDTH, Runagate.MENU_HEIGHT);
         this.camera.translate(Runagate.MENU_WIDTH/2f, Runagate.MENU_HEIGHT/2f);
@@ -45,8 +48,8 @@ public class LevelSelector extends Template {
 
         font = Runagate.getInstance().getAssetManager().getBitmapFont(48, 12);
         font.setColor(0, 0, 0, 1);
-        this.playBtn = new Button(16, 800, 50, 50, ">", font, this::playWorld);
-        this.backBtn = new Button(332, 300, 250, 50, "Back", font, this::backToMenu);
+        this.backBtn = new Button(40, 1350, 250, 50, "BACK", font, this::backToMenu);
+        this.playBtn = new Button(350, 800, 50, 50, ">", font, this::playWorld);
 
         this.index = 0;
     }
@@ -57,7 +60,9 @@ public class LevelSelector extends Template {
 
         batch.begin();
         for(int i = 0; i < worlds.size(); i++) {
-            font.draw(batch, worlds.get(i).toString(), 36, 194-i*12);
+            font.setColor(1, 1, 1, 1);
+            font.draw(batch, worlds.get(i).toString(), 460, 1390-i*60);
+            font.setColor(0, 0, 0, 1);
         }
 
         if(index > 0)
@@ -71,11 +76,11 @@ public class LevelSelector extends Template {
         batch.setProjectionMatrix(this.camera.combined);
         this.camera.update();
 
-        //if(216-getY() > 15 && 216-getY() < 1000) {
-            index = 1;//Math.min((1000-getY())/48, worlds.size());
-        //}
+        if(getX() > 330) {
+            index = Math.min((1410 - (getY()-50))/60, worlds.size());
+        }
 
-        playBtn.setY(1000-(40+index*48));
+        playBtn.setY(1410-index*60);
 
         if(index > 0)
             playBtn.update(deltaTime);
@@ -102,7 +107,10 @@ public class LevelSelector extends Template {
             }
         }
 
-        Runagate.getInstance().setScreen(new Game(levels));
+        if(toPlay)
+            Runagate.getInstance().setScreen(new Game(levels));
+        else
+            Runagate.getInstance().setScreen(new WorldEditor(levels, world));
     }
 
     @Override

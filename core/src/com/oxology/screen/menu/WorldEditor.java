@@ -20,6 +20,7 @@ public class WorldEditor extends Template {
     private static final int DELETE_MODE = 1;
 
     private List<Level> levels;
+    private UUID world;
 
     private int cursorX, cursorY;
 
@@ -42,6 +43,15 @@ public class WorldEditor extends Template {
         this.saveBtn = new Button(40, 1350, 250, 50, "SAVE", font, this::saveWorld);
         this.backBtn = new Button(40, 1290, 250, 50, "BACK", font, this::goBack);
         this.modeBtn = new Button(40, 1230, 250, 50, mode == ADD_MODE ? "ADD" : "DELETE", font, this::changeMode);
+    }
+
+    public WorldEditor(List<Level> levels, UUID world) {
+        this();
+        this.levels = levels;
+        this.world = world;
+        for(Level level : levels) {
+            level.generateSnippet();
+        }
     }
 
     @Override
@@ -99,7 +109,7 @@ public class WorldEditor extends Template {
         File worldsFolder = new File(gameDataFolder, "worlds");
         if(!worldsFolder.exists()) gameDataFolder.mkdirs();
 
-        File world = new File(worldsFolder, UUID.randomUUID().toString());
+        File world = new File(worldsFolder, this.world != null ? this.world.toString() : UUID.randomUUID().toString());
         if(!world.exists()) world.mkdirs();
 
         for(Level level : levels) {

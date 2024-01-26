@@ -29,7 +29,7 @@ public class Main extends Template {
         BitmapFont font = Runagate.getInstance().getAssetManager().getBitmapFont(64, 16);
         font.setColor(0, 0, 0, 1);
         playBtn = new Button(Runagate.MENU_WIDTH/2f - 720/2f, 700, 720, 128, "PLAY", font, this::goToLevelSelector);
-        worldBtn = new Button(Runagate.MENU_WIDTH/2f - 720/2f, 550, 720, 128, "EDIT", font, this::goToLevelEditor);
+        worldBtn = new Button(Runagate.MENU_WIDTH/2f - 720/2f, 550, 720, 128, "EDIT", font, this::goToLevelSelectorToEdit);
         exitBtn = new Button(Runagate.MENU_WIDTH/2f - 720/2f, 400, 720, 128, "EXIT", font, Gdx.app::exit);
 
         setFading(true);
@@ -63,12 +63,12 @@ public class Main extends Template {
         version.setColor(1, 1, 1, batch.getColor().a);
     }
 
-    public void goToLevelSelector() {
-        Runagate.getInstance().setScreen(new LevelSelector());
+    public void goToLevelSelectorToEdit() {
+        Runagate.getInstance().setScreen(new LevelSelector(false));
     }
 
-    public void goToLevelEditor() {
-        Runagate.getInstance().setScreen(new WorldEditor());
+    public void goToLevelSelector() {
+        Runagate.getInstance().setScreen(new LevelSelector(true));
     }
 
     @Override
