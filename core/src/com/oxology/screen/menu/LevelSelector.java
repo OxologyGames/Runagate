@@ -20,6 +20,7 @@ public class LevelSelector extends Template {
     private BitmapFont font;
     private Button playBtn;
     private Button backBtn;
+    private Button newBtn;
     private int index;
     private File worldsFolder;
     private boolean toPlay;
@@ -49,6 +50,7 @@ public class LevelSelector extends Template {
         font = Runagate.getInstance().getAssetManager().getBitmapFont(48, 12);
         font.setColor(0, 0, 0, 1);
         this.backBtn = new Button(40, 1350, 250, 50, "BACK", font, this::backToMenu);
+        this.newBtn = new Button(40, 1290, 250, 50, "NEW", font, this::newWorld);
         this.playBtn = new Button(350, 800, 50, 50, ">", font, this::playWorld);
 
         this.index = 0;
@@ -69,6 +71,9 @@ public class LevelSelector extends Template {
             playBtn.draw(batch);
 
         backBtn.draw(batch);
+
+        if(!toPlay)
+            newBtn.draw(batch);
         batch.end();
     }
 
@@ -86,6 +91,9 @@ public class LevelSelector extends Template {
             playBtn.update(deltaTime);
 
         backBtn.update(deltaTime);
+
+        if(!toPlay)
+            newBtn.update(deltaTime);
     }
 
     private void backToMenu() {
@@ -111,6 +119,10 @@ public class LevelSelector extends Template {
             Runagate.getInstance().setScreen(new Game(levels));
         else
             Runagate.getInstance().setScreen(new WorldEditor(levels, world));
+    }
+
+    private void newWorld() {
+        Runagate.getInstance().setScreen(new WorldEditor());
     }
 
     @Override
