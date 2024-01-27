@@ -16,7 +16,6 @@ public class Runagate extends com.badlogic.gdx.Game {
 
 	public static final int MENU_WIDTH = 2560;
 	public static final int MENU_HEIGHT = 1440;
-	public static final float MENU_FONT_SCALE = 0.2f;
 
 	private int resX, resY;
 
@@ -61,7 +60,7 @@ public class Runagate extends com.badlogic.gdx.Game {
 		return instance;
 	}
 
-	public AssetManager getTextureManager() {
+	public AssetManager getAssetManager() {
 		if(assetManager == null)
 			assetManager = new AssetManager();
 

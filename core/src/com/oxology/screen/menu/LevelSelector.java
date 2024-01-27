@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.oxology.Runagate;
-import com.oxology.menu.Button;
+import com.oxology.ui.Button;
 import com.oxology.screen.Game;
 import com.oxology.screen.Template;
 import com.oxology.world.Level;
@@ -20,11 +20,15 @@ public class LevelSelector extends Template {
     private BitmapFont font;
     private Button playBtn;
     private Button backBtn;
+    private Button newBtn;
     private int index;
     private File worldsFolder;
+    private boolean toPlay;
 
-    public LevelSelector() {
+    public LevelSelector(boolean toPlay) {
         super();
+
+        this.toPlay = toPlay;
 
         this.camera = new OrthographicCamera(Runagate.MENU_WIDTH, Runagate.MENU_HEIGHT);
         this.camera.translate(Runagate.MENU_WIDTH/2f, Runagate.MENU_HEIGHT/2f);
@@ -43,10 +47,11 @@ public class LevelSelector extends Template {
             } catch(IllegalArgumentException ignored) {}
         }
 
-        font = Runagate.getInstance().getTextureManager().getBitmapFont(48, 12);
+        font = Runagate.getInstance().getAssetManager().getBitmapFont(48, 12);
         font.setColor(0, 0, 0, 1);
-        this.playBtn = new Button(16, 800, 50, 50, ">", font, this::playWorld);
-        this.backBtn = new Button(332, 300, 250, 50, "Back", font, this::backToMenu);
+        this.backBtn = new Button(40, 1350, 250, 50, "BACK", font, this::backToMenu);
+        this.newBtn = new Button(40, 1290, 250, 50, "NEW", font, this::newWorld);
+        this.playBtn = new Button(350, 800, 50, 50, ">", font, this::playWorld);
 
         this.index = 0;
     }
@@ -57,13 +62,18 @@ public class LevelSelector extends Template {
 
         batch.begin();
         for(int i = 0; i < worlds.size(); i++) {
-            font.draw(batch, worlds.get(i).toString(), 36, 194-i*12);
+            font.setColor(1, 1, 1, 1);
+            font.draw(batch, worlds.get(i).toString(), 460, 1390-i*60);
+            font.setColor(0, 0, 0, 1);
         }
 
         if(index > 0)
             playBtn.draw(batch);
 
         backBtn.draw(batch);
+
+        if(!toPlay)
+            newBtn.draw(batch);
         batch.end();
     }
 
@@ -71,16 +81,19 @@ public class LevelSelector extends Template {
         batch.setProjectionMatrix(this.camera.combined);
         this.camera.update();
 
-        //if(216-getY() > 15 && 216-getY() < 1000) {
-            index = 3;//Math.min((1000-getY())/48, worlds.size());
-        //}
+        if(getX() > 330) {
+            index = Math.min((1410 - (getY()-50))/60, worlds.size());
+        }
 
-        playBtn.setY(1000-(40+index*48));
+        playBtn.setY(1410-index*60);
 
         if(index > 0)
             playBtn.update(deltaTime);
 
         backBtn.update(deltaTime);
+
+        if(!toPlay)
+            newBtn.update(deltaTime);
     }
 
     private void backToMenu() {
@@ -89,7 +102,6 @@ public class LevelSelector extends Template {
 
     private void playWorld() {
         UUID world = worlds.get(index-1);
-
         List<Level> levels = new ArrayList<>();
         File worldFolder = new File(worldsFolder, world.toString());
         for(File levelFile : worldFolder.listFiles()) {
@@ -103,7 +115,14 @@ public class LevelSelector extends Template {
             }
         }
 
-        Runagate.getInstance().setScreen(new Game(levels));
+        if(toPlay)
+            Runagate.getInstance().setScreen(new Game(levels));
+        else
+            Runagate.getInstance().setScreen(new WorldEditor(levels, world));
+    }
+
+    private void newWorld() {
+        Runagate.getInstance().setScreen(new WorldEditor());
     }
 
     @Override

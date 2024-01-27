@@ -2,14 +2,14 @@ package com.oxology.screen.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
-import com.oxology.menu.Button;
+import com.oxology.ui.Button;
+import com.oxology.ui.Panel;
+import com.oxology.ui.Toggle;
 import com.oxology.screen.Template;
 import com.oxology.world.Level;
 import com.oxology.world.Tile;
@@ -19,18 +19,15 @@ public class LevelEditor extends Template {
     private SpriteBatch levelBatch;
     private Level level;
 
-    private Texture border;
-
-    private Texture airTexture, wallTexture;
-    private Texture cursor;
-    private Texture chainTexture;
+    private Texture wallTexture;
     private int cursorX, cursorY;
 
-    private Button saveBtn;
-    private Button backBtn;
+    private Panel panel;
+    private Toggle toggle;
     private Button modeBtn;
 
-    private boolean editable;
+    private boolean editFreeze;
+    private boolean grid;
 
     private int mode;
     // 0 - Wall
@@ -52,23 +49,24 @@ public class LevelEditor extends Template {
 
         this.level = level;
 
-        this.border = new Texture("level/levelBorder.png");
-
-        this.airTexture = new Texture("level/air.png");
         this.wallTexture = new Texture("level/wall.png");
-        this.chainTexture = new Texture("level/chain.png");
 
-        this.editable = false;
+        this.editFreeze = true;
+        this.grid = true;
 
-        this.cursor = new Texture("level/cursor.png");
+        this.panel = new Panel(0, 0, 330);
 
-        BitmapFont font = new BitmapFont(Gdx.files.internal("font/PressStart2P.fnt"));
-        font.setColor(Color.WHITE);
-        font.getData().scaleX = Runagate.MENU_FONT_SCALE;
-        font.getData().scaleY = Runagate.MENU_FONT_SCALE;
-//        this.saveBtn = new Button(332, 189, 0, "Save", font, this::saveLevel, this);
-//        this.backBtn = new Button(332, 177, 0, "Back", font, this::backToWorld, this);
-//        this.modeBtn = new Button(332, 165, 0, "Wall", font, this::changeMode, this);
+        BitmapFont font = Runagate.getInstance().getAssetManager().getBitmapFont(48, 12);
+        font.setColor(0, 0, 0, 1);
+        Button saveBtn = new Button(40, 1350, 250, 50, "SAVE", font, this::saveLevel);
+        Button backBtn = new Button(40, 1290, 250, 50, "BACK", font, this::backToWorld);
+        modeBtn = new Button(40, 1230, 250, 50, "WALL", font, this::changeMode);
+
+        this.panel.addElement(saveBtn);
+        this.panel.addElement(backBtn);
+        this.panel.addElement(modeBtn);
+
+        this.toggle = new Toggle(2560-128, 64, this::togglePanel);
 
         this.mode = 0;
     }
@@ -76,41 +74,29 @@ public class LevelEditor extends Template {
     @Override
     public void render(float deltaTime) {
         update(deltaTime);
-        levelBatch.begin();
-        levelBatch.draw(border, 8, 17);
 
-        for(int i = 0; i < 40; i++) {
-            for(int j = 0; j < 30; j++) {
-                Texture texture = airTexture;
-                if(level.getTiles()[i][j] == Tile.WALL) texture = wallTexture;
-                if(level.getTiles()[i][j] == Tile.CHAIN) texture = chainTexture;
-                levelBatch.draw(texture, 9+i*8, 18+j*6);
+        batch.begin();
+        for(int i = 0; i < 80; i++) {
+            for(int j = 0; j < 45; j++) {
+                if(level.getTiles()[i][j] == Tile.WALL)
+                    batch.draw(wallTexture, i*32, j*32, 32, 32);
             }
         }
 
-        levelBatch.draw(cursor, 9+cursorX*8, 18+cursorY*6);
-        saveBtn.draw(levelBatch);
-        backBtn.draw(levelBatch);
-        modeBtn.draw(levelBatch);
+        if(grid)
+            batch.draw(Runagate.getInstance().getAssetManager().levelMesh, 0, 0, 2560, 1440);
 
-        levelBatch.end();
+        batch.draw(Runagate.getInstance().getAssetManager().cursor, cursorX*32, cursorY*32, 32, 32);
+
+        panel.draw(batch);
+
+        toggle.draw(batch);
+        batch.end();
     }
 
     public void update(float deltaTime) {
         levelCamera.update();
         levelBatch.setProjectionMatrix(levelCamera.combined);
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.UP) && cursorY < 29) {
-            cursorY++;
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && cursorY > 0) {
-            cursorY--;
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && cursorX < 39) {
-            cursorX++;
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && cursorX > 0) {
-            cursorX--;
-        }
 
         if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
@@ -130,11 +116,19 @@ public class LevelEditor extends Template {
             }
         }
 
-        if(getX() > 8 && getX() < 328 && getY() > 17 && getY() < 197) {
-            cursorX = (getX()-9)/8;
-            cursorY = (getY()-18)/6;
+        if(Gdx.input.isKeyJustPressed(Input.Keys.G)) {
+            grid = !grid;
+        }
 
-            if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && editable) {
+        cursorX = Math.min(getX()/32, 79);
+        cursorY = Math.min(getY()/32, 44);
+
+        panel.update(deltaTime);
+
+        toggle.update(deltaTime);
+
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            if(!toggle.isHolding() && !editFreeze) {
                 switch (mode) {
                     case 0:
                         level.getTiles()[cursorX][cursorY] = Tile.WALL;
@@ -147,8 +141,8 @@ public class LevelEditor extends Template {
                         break;
                 }
             }
-
-            if(!Gdx.input.isButtonPressed(Input.Buttons.LEFT)) editable = true;
+        } else {
+            editFreeze = false;
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
@@ -157,29 +151,28 @@ public class LevelEditor extends Template {
             else
                 level.getTiles()[cursorX][cursorY] = Tile.AIR;
         }
-
-        saveBtn.update(deltaTime);
-        backBtn.update(deltaTime);
-        modeBtn.update(deltaTime);
     }
 
     private void changeMode() {
         mode++;
         if(mode > 2) mode = 0;
 
-        String text = "Wall";
+        String text = "WALL";
         switch (mode) {
             case 1:
-                text = "Air";
+                text = "AIR";
                 break;
             case 2:
-                text = "Chain";
+                text = "CHAIN";
                 break;
         }
 
-        modeBtn.setText(text);
-        GlyphLayout layout = new GlyphLayout(modeBtn.getFont(), modeBtn.getText());
-        modeBtn.setWidth(layout.width);
+        Button button = (Button) panel.getElement(modeBtn);
+        button.setText(text);
+    }
+
+    private void togglePanel() {
+        panel.toggle();
     }
 
     private void saveLevel() {

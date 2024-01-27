@@ -2,12 +2,9 @@ package com.oxology.screen.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
-import com.oxology.menu.Button;
+import com.oxology.ui.Button;
 import com.oxology.screen.Template;
 import com.oxology.world.Level;
 
@@ -19,97 +16,79 @@ import java.util.List;
 import java.util.UUID;
 
 public class WorldEditor extends Template {
-    private OrthographicCamera levelCamera;
-    private SpriteBatch levelBatch;
+    private static final int ADD_MODE = 0;
+    private static final int DELETE_MODE = 1;
+
     private List<Level> levels;
+    private UUID world;
 
-    private Texture border;
-
-    private Texture cursor;
-    private Texture addCursor;
     private int cursorX, cursorY;
 
-    private Button saveBtn;
-    private Button backBtn;
+    private int mode;
+
+    private final Button saveBtn;
+    private final Button backBtn;
+    private final Button modeBtn;
 
     public WorldEditor() {
         super();
 
-        levelCamera = new OrthographicCamera(384, 216);
-        levelCamera.translate(384/2f, 216/2f);
-        levelCamera.update();
-
-        levelBatch = new SpriteBatch();
-
         this.levels = new ArrayList<>();
 
-        this.border = new Texture("level/levelBorder.png");
+        this.cursorX = 0;
+        this.cursorY = 0;
 
-        this.cursor = new Texture("level/levelBorder2.png");
-        this.addCursor = new Texture("level/levelBorderAdd.png");
-
-        this.cursorX = 3;
-        this.cursorY = 3;
-
-        BitmapFont font = Runagate.getInstance().getTextureManager().getBitmapFont(48, 12);
+        BitmapFont font = Runagate.getInstance().getAssetManager().getBitmapFont(48, 12);
         font.setColor(0, 0, 0, 1);
-        this.saveBtn = new Button(332, 500, 250, 50, "SAVE", font, this::saveWorld);
-        this.backBtn = new Button(332, 177, 250, 50, "BACK", font, this::goBack);
+        this.saveBtn = new Button(40, 1350, 250, 50, "SAVE", font, this::saveWorld);
+        this.backBtn = new Button(40, 1290, 250, 50, "BACK", font, this::goBack);
+        this.modeBtn = new Button(40, 1230, 250, 50, mode == ADD_MODE ? "ADD" : "DELETE", font, this::changeMode);
+    }
+
+    public WorldEditor(List<Level> levels, UUID world) {
+        this();
+        this.levels = levels;
+        this.world = world;
+        for(Level level : levels) {
+            level.generateSnippet();
+        }
     }
 
     @Override
     public void render(float deltaTime) {
         update(deltaTime);
-        levelBatch.begin();
-        levelBatch.draw(border, 8, 17);
-
-        if(getLevel(cursorX, cursorY) != null)
-            levelBatch.draw(cursor, 9+cursorX*48, 18+cursorY*27);
-        else
-            levelBatch.draw(addCursor, 9+cursorX*48, 18+cursorY*27);
-
-        for(Level level : levels) {
-            levelBatch.draw(cursor/*level.getSnippet()*/, 9+level.getX()*48, 18+level.getY()*27, 48, 27);
-        }
-
-        levelBatch.end();
 
         batch.begin();
+        batch.draw(Runagate.getInstance().getAssetManager().pixelGray, 330, 40, 2190, 1360);
+        batch.draw(Runagate.getInstance().getAssetManager().worldMesh, 330, 40, 2190, 1360);
+        if(getLevel(cursorX, cursorY) == null && mode == 0)
+            batch.draw(Runagate.getInstance().getAssetManager().levelAdd, ((2520-330)/2)+138+cursorX*384, ((1360-40)/2)-26+cursorY*216);
+        else if(getLevel(cursorX, cursorY) != null && mode == 1)
+            batch.draw(Runagate.getInstance().getAssetManager().levelDelete, ((2520-330)/2)+138+cursorX*384, ((1360-40)/2)-26+cursorY*216);
+
+        for(Level level : levels) {
+            batch.draw(level.getSnippet(), ((2520-330)/2)+138+level.getX()*384, ((1360-40)/2)-26+level.getY()*216, 384, 216, 0, 0, 1, 1);
+        }
         saveBtn.draw(batch);
         backBtn.draw(batch);
+        modeBtn.draw(batch);
         batch.end();
     }
 
     public void update(float deltaTime) {
-        levelCamera.update();
-        levelBatch.setProjectionMatrix(levelCamera.combined);
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.UP) && cursorY < 29) {
-            cursorY++;
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN) && cursorY > 0) {
-            cursorY--;
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT) && cursorX < 39) {
-            cursorX++;
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT) && cursorX > 0) {
-            cursorX--;
-        }
-
-        if(getX() > 8 && getX() < 328 && getY() > 17 && getY() < 197) {
-            cursorX = (getX()-9)/48;
-            cursorY = (getY()-18)/27;
+        if(getX() > 330 && getX() < 2520 && getY() > 40 && getY() < 1400) {
+            int mouseX = (getX()-(2520-330)/2)-138;
+            cursorX = (mouseX < 0 ? mouseX-384 : mouseX)/384;
+            int mouseY = (getY()-(1360-40)/2)+26;
+            cursorY = (mouseY < 0 ? mouseY-216 : mouseY)/216;
 
             if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT))
                 goToLevel();
         }
 
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            goToLevel();
-        }
-
         saveBtn.update(deltaTime);
         backBtn.update(deltaTime);
+        modeBtn.update(deltaTime);
     }
 
     public void saveLevel(Level level) {
@@ -130,7 +109,7 @@ public class WorldEditor extends Template {
         File worldsFolder = new File(gameDataFolder, "worlds");
         if(!worldsFolder.exists()) gameDataFolder.mkdirs();
 
-        File world = new File(worldsFolder, UUID.randomUUID().toString());
+        File world = new File(worldsFolder, this.world != null ? this.world.toString() : UUID.randomUUID().toString());
         if(!world.exists()) world.mkdirs();
 
         for(Level level : levels) {
@@ -146,10 +125,10 @@ public class WorldEditor extends Template {
 
     private void goToLevel() {
         Level level = getLevel(cursorX, cursorY);
-        if(level == null)
+        if(level == null) {
             level = new Level(cursorX, cursorY);
-
-        this.levels.add(level);
+            this.levels.add(level);
+        }
 
         Runagate.getInstance().setScreen(new LevelEditor(this, level));
     }
@@ -167,6 +146,11 @@ public class WorldEditor extends Template {
         }
 
         return null;
+    }
+
+    private void changeMode() {
+        mode = mode == ADD_MODE ? DELETE_MODE : ADD_MODE;
+        modeBtn.setText(mode == ADD_MODE ? "ADD" : "DELETE");
     }
 
     @Override

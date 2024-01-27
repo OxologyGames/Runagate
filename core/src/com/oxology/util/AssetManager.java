@@ -11,13 +11,41 @@ public class AssetManager {
     public Texture splash;
     public Texture logo;
     public Texture pixel;
+    public Texture pixelGray;
+
+    public Texture cursor;
+    public Texture toggle;
+    public Texture worldMesh;
+    public Texture levelMesh;
+    public Texture levelAdd;
+    public Texture levelDelete;
+
+    public Texture playerIdle;
+    public Texture playerWalk;
+    public Texture playerRun;
+    public Texture playerJump;
+    public Texture playerLand;
 
     public AssetManager() {
         generator = new FreeTypeFontGenerator(Gdx.files.internal("font/bahnschrift.ttf"));
 
-        splash = new Texture("splash.png");
-        logo = new Texture("logo.png");
-        pixel = new Texture("pixel.png");
+        splash = new Texture("menu/splash.png");
+        logo = new Texture("menu/main/logo.png");
+        pixel = new Texture("menu/pixel.png");
+        pixelGray = new Texture("menu/pixelGray.png");
+
+        cursor = new Texture("menu/level/cursor.png");
+        toggle = new Texture("menu/toggle.png");
+        worldMesh = new Texture("menu/world/mesh.png");
+        levelMesh = new Texture("menu/level/mesh.png");
+        levelAdd = new Texture("menu/world/levelAdd.png");
+        levelDelete = new Texture("menu/world/levelDelete.png");
+
+        playerIdle = new Texture("entity/player/idle.png");
+        playerWalk = new Texture("entity/player/walk.png");
+        playerRun = new Texture("entity/player/run.png");
+        playerJump = new Texture("entity/player/jump.png");
+        playerLand = new Texture("entity/player/land.png");
     }
 
     public BitmapFont getBitmapFont(int size, int spacing) {
