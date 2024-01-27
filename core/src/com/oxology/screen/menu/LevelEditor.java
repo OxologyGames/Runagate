@@ -2,21 +2,17 @@ package com.oxology.screen.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.oxology.Runagate;
 import com.oxology.ui.Button;
 import com.oxology.ui.Panel;
 import com.oxology.ui.Toggle;
 import com.oxology.screen.Template;
 import com.oxology.world.Level;
-import com.oxology.world.Tile;
+import com.oxology.world.block.BrickBlock;
 
 public class LevelEditor extends Template {
-    private OrthographicCamera levelCamera;
-    private SpriteBatch levelBatch;
     private Level level;
 
     private Texture wallTexture;
@@ -40,12 +36,6 @@ public class LevelEditor extends Template {
         super();
 
         this.worldEditorScreen = worldEditorScreen;
-
-        levelCamera = new OrthographicCamera(Runagate.MENU_WIDTH, Runagate.MENU_HEIGHT);
-        levelCamera.translate(Runagate.MENU_WIDTH/2f, Runagate.MENU_HEIGHT/2f);
-        levelCamera.update();
-
-        levelBatch = new SpriteBatch();
 
         this.level = level;
 
@@ -78,7 +68,7 @@ public class LevelEditor extends Template {
         batch.begin();
         for(int i = 0; i < 80; i++) {
             for(int j = 0; j < 45; j++) {
-                if(level.getTiles()[i][j] == Tile.WALL)
+                if(level.getTiles()[i][j] instanceof BrickBlock)
                     batch.draw(wallTexture, i*32, j*32, 32, 32);
             }
         }
@@ -95,9 +85,6 @@ public class LevelEditor extends Template {
     }
 
     public void update(float deltaTime) {
-        levelCamera.update();
-        levelBatch.setProjectionMatrix(levelCamera.combined);
-
         if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                 saveLevel();
@@ -131,25 +118,18 @@ public class LevelEditor extends Template {
             if(!toggle.isHolding() && !editFreeze) {
                 switch (mode) {
                     case 0:
-                        level.getTiles()[cursorX][cursorY] = Tile.WALL;
+                        level.getTiles()[cursorX][cursorY] = new BrickBlock(cursorX, cursorY);
                         break;
-                    case 1:
-                        level.getTiles()[cursorX][cursorY] = Tile.AIR;
-                        break;
-                    case 2:
-                        level.getTiles()[cursorX][cursorY] = Tile.CHAIN;
-                        break;
+//                    case 1:
+//                        level.getTiles()[cursorX][cursorY] = Tile.AIR;
+//                        break;
+//                    case 2:
+//                        level.getTiles()[cursorX][cursorY] = Tile.CHAIN;
+//                        break;
                 }
             }
         } else {
             editFreeze = false;
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            if(level.getTiles()[cursorX][cursorY] == Tile.AIR)
-                level.getTiles()[cursorX][cursorY] = Tile.WALL;
-            else
-                level.getTiles()[cursorX][cursorY] = Tile.AIR;
         }
     }
 

@@ -8,6 +8,7 @@ import com.oxology.ui.Button;
 import com.oxology.screen.Game;
 import com.oxology.screen.Template;
 import com.oxology.world.Level;
+import com.oxology.world.World;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -104,21 +105,25 @@ public class LevelSelector extends Template {
         UUID world = worlds.get(index-1);
         List<Level> levels = new ArrayList<>();
         File worldFolder = new File(worldsFolder, world.toString());
-        for(File levelFile : worldFolder.listFiles()) {
-            try {
-                FileInputStream inputStream = new FileInputStream(levelFile);
-                ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
 
-                levels.add((Level) objectInputStream.readObject());
-            } catch(Exception e) {
-                e.printStackTrace();
+        File[] levelFiles = worldFolder.listFiles();
+        if(levelFiles != null) {
+            for(File levelFile : levelFiles) {
+                try {
+                    FileInputStream inputStream = new FileInputStream(levelFile);
+                    ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+
+                    levels.add((Level) objectInputStream.readObject());
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
         if(toPlay)
-            Runagate.getInstance().setScreen(new Game(levels));
+            Runagate.getInstance().setScreen(new Game(new World(levels, world)));
         else
-            Runagate.getInstance().setScreen(new WorldEditor(levels, world));
+            Runagate.getInstance().setScreen(new WorldEditor(new World(levels, world)));
     }
 
     private void newWorld() {

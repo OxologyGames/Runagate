@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.World;
+import com.oxology.world.block.BaseBlock;
+import com.oxology.world.block.BrickBlock;
 import com.oxology.world.entity.Player;
 
 import java.io.Serializable;
@@ -21,7 +23,7 @@ public class Level implements Serializable {
 
     transient private World world;
 
-    private Tile[][] tiles;
+    private BaseBlock[][] tiles;
     private int x, y;
     private transient Texture snippet;
     private List<GameObject> gameObjects;
@@ -29,18 +31,13 @@ public class Level implements Serializable {
     private transient Body playerBody;
 
     public Level(int x, int y) {
-        tiles = new Tile[80][45];
+        tiles = new BaseBlock[80][45];
         this.x = x;
         this.y = y;
         world = new World(new Vector2(0, -1000), false);
 
-        for(int i = 0; i < 80; i++) {
-            for(int j = 0; j < 45; j++) {
-                tiles[i][j] = Tile.AIR;
-            }
-        }
+        generateSnippet();
 
-        snippet = new Texture("level/levelBorder2.png");
         gameObjects = new ArrayList<>();
 
         player = new Player(4, 6);
@@ -51,8 +48,8 @@ public class Level implements Serializable {
 
         for(int i = 0; i < 80; i++) {
             for(int j = 0; j < 45; j++) {
-                if(tiles[i][j] == Tile.WALL) {
-                    generatePlatform(i, j);
+                if(tiles[i][j] instanceof BrickBlock) {
+                    tiles[i][j].createBlock(world);
                 }
             }
         }
@@ -81,23 +78,6 @@ public class Level implements Serializable {
         shape.dispose();
     }
 
-    private void generatePlatform(int x, int y) {
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set(x + 0.5f, y + 0.5f);
-
-        Body body = world.createBody(bodyDef);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(0.5f, 0.5f);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-
-        body.createFixture(fixtureDef);
-        shape.dispose();
-    }
-
     public void generateSnippet() {
         SpriteBatch batch = new SpriteBatch();
         OrthographicCamera camera = new OrthographicCamera(2560, 1440);
@@ -114,7 +94,7 @@ public class Level implements Serializable {
         batch.begin();
         for(int i = 0; i < 80; i++) {
             for(int j = 0; j < 45; j++) {
-                if(tiles[i][j] == Tile.WALL)
+                if(tiles[i][j] instanceof BrickBlock)
                     batch.draw(wallTexture, i*32, j*32, 32, 32);
             }
         }
@@ -124,15 +104,7 @@ public class Level implements Serializable {
         snippet = frameBuffer.getColorBufferTexture();
     }
 
-    public Level(Tile[][] tiles) {
-        this.tiles = tiles;
-    }
-
-    public List<GameObject> getGameObjects() {
-        return gameObjects;
-    }
-
-    public Tile[][] getTiles() {
+    public BaseBlock[][] getTiles() {
         return tiles;
     }
 
@@ -154,7 +126,6 @@ public class Level implements Serializable {
 
     public void update(float deltaTime) {
         player.update(deltaTime);
-        player.checkForCollisions(deltaTime, this);
         world.step(deltaTime, 6, 2);
         float force = 100.0f;
 

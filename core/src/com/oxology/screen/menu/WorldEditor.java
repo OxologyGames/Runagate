@@ -7,20 +7,19 @@ import com.oxology.Runagate;
 import com.oxology.ui.Button;
 import com.oxology.screen.Template;
 import com.oxology.world.Level;
+import com.oxology.world.World;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class WorldEditor extends Template {
     private static final int ADD_MODE = 0;
     private static final int DELETE_MODE = 1;
 
-    private List<Level> levels;
-    private UUID world;
+    private World world;
 
     private int cursorX, cursorY;
 
@@ -33,7 +32,7 @@ public class WorldEditor extends Template {
     public WorldEditor() {
         super();
 
-        this.levels = new ArrayList<>();
+        world = new World(new ArrayList<>(), UUID.randomUUID());
 
         this.cursorX = 0;
         this.cursorY = 0;
@@ -45,11 +44,10 @@ public class WorldEditor extends Template {
         this.modeBtn = new Button(40, 1230, 250, 50, mode == ADD_MODE ? "ADD" : "DELETE", font, this::changeMode);
     }
 
-    public WorldEditor(List<Level> levels, UUID world) {
+    public WorldEditor(World world) {
         this();
-        this.levels = levels;
         this.world = world;
-        for(Level level : levels) {
+        for(Level level : world.getLevels()) {
             level.generateSnippet();
         }
     }
@@ -66,7 +64,7 @@ public class WorldEditor extends Template {
         else if(getLevel(cursorX, cursorY) != null && mode == 1)
             batch.draw(Runagate.getInstance().getAssetManager().levelDelete, ((2520-330)/2)+138+cursorX*384, ((1360-40)/2)-26+cursorY*216);
 
-        for(Level level : levels) {
+        for(Level level : world.getLevels()) {
             batch.draw(level.getSnippet(), ((2520-330)/2)+138+level.getX()*384, ((1360-40)/2)-26+level.getY()*216, 384, 216, 0, 0, 1, 1);
         }
         saveBtn.draw(batch);
@@ -92,9 +90,9 @@ public class WorldEditor extends Template {
     }
 
     public void saveLevel(Level level) {
-        for(int i = 0; i < levels.size(); i++) {
-            if(level.getX() == levels.get(i).getX() && level.getY() == levels.get(i).getY())
-                levels.set(i, level);
+        for(int i = 0; i < world.getLevels().size(); i++) {
+            if(level.getX() == world.getLevels().get(i).getX() && level.getY() == world.getLevels().get(i).getY())
+                world.getLevels().set(i, level);
         }
     }
 
@@ -109,10 +107,10 @@ public class WorldEditor extends Template {
         File worldsFolder = new File(gameDataFolder, "worlds");
         if(!worldsFolder.exists()) gameDataFolder.mkdirs();
 
-        File world = new File(worldsFolder, this.world != null ? this.world.toString() : UUID.randomUUID().toString());
+        File world = new File(worldsFolder, this.world.getId().toString());
         if(!world.exists()) world.mkdirs();
 
-        for(Level level : levels) {
+        for(Level level : this.world.getLevels()) {
             try {
                 FileOutputStream fileOutputStream = new FileOutputStream(world + File.separator + level.getX() + "_" + level.getY() + ".dat");
                 ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
@@ -127,7 +125,7 @@ public class WorldEditor extends Template {
         Level level = getLevel(cursorX, cursorY);
         if(level == null) {
             level = new Level(cursorX, cursorY);
-            this.levels.add(level);
+            this.world.addLevel(level);
         }
 
         Runagate.getInstance().setScreen(new LevelEditor(this, level));
@@ -141,7 +139,7 @@ public class WorldEditor extends Template {
     }
 
     private Level getLevel(int x, int y) {
-        for(Level level : levels) {
+        for(Level level : world.getLevels()) {
             if(level.getX() == x && level.getY() == y) return level;
         }
 

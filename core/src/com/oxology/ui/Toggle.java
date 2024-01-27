@@ -11,11 +11,11 @@ public class Toggle extends UIElement {
     private boolean holding, held;
     private boolean heldBefore;
 
-    private Action click;
+    private final Action click;
 
     public interface Action {
         void onAction();
-    };
+    }
 
     public Toggle(float x, float y, Action click) {
         this.x = x;

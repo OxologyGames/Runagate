@@ -1,8 +1,6 @@
 package com.oxology.world.entity;
 
 import com.oxology.world.GameObject;
-import com.oxology.world.Level;
-import com.oxology.world.Tile;
 
 public class Entity extends GameObject {
     private static final long serialVersionUID = -3038644230555076026L;
@@ -131,36 +129,6 @@ public class Entity extends GameObject {
 
     private void setCollider(boolean value, int index) {
         this.colliders[index] = value;
-    }
-
-    public void checkForCollisions(float deltaTime, Level level) {
-        Tile[][] tiles = level.getTiles();
-
-        boolean collider0 =
-                tiles[(int) (getNextX(deltaTime) + 0.6f)][getNextY(deltaTime) % 1 == 0 ? (int) Math.floor(getNextY(deltaTime)-1) : (int) Math.floor(getNextY(deltaTime))] == Tile.WALL ||
-                        tiles[(int) (getNextX(deltaTime) + 1.4f)][getNextY(deltaTime) % 1 == 0 ? (int) Math.floor(getNextY(deltaTime)-1) : (int) Math.floor(getNextY(deltaTime))] == Tile.WALL;
-
-        boolean collider1 =
-                tiles[(getNextX(deltaTime)*2) % 1 == 0 ? (int) (getNextX(deltaTime)-0.5f) : (int) (getNextX(deltaTime)+0.5f)][(int) Math.floor(getNextY(deltaTime)+0.1f)] == Tile.WALL ||
-                        tiles[(getNextX(deltaTime)*2) % 1 == 0 ? (int) (getNextX(deltaTime)-0.5f) : (int) (getNextX(deltaTime)+0.5f)][(int) Math.floor(getNextY(deltaTime)+1.1f)] == Tile.WALL ||
-                        tiles[(getNextX(deltaTime)*2) % 1 == 0 ? (int) (getNextX(deltaTime)-0.5f) : (int) (getNextX(deltaTime)+0.5f)][(int) Math.floor(getNextY(deltaTime)+1.9f)] == Tile.WALL;
-
-        boolean collider2 =
-                tiles[((getNextX(deltaTime)*2) % 1 == 0 ? (int) (getNextX(deltaTime)+1.0f) : (int) (getNextX(deltaTime)+0.5f))+1][(int) Math.floor(getNextY(deltaTime)+0.1f)] == Tile.WALL ||
-                        tiles[((getNextX(deltaTime)*2) % 1 == 0 ? (int) (getNextX(deltaTime)+1.0f) : (int) (getNextX(deltaTime)+0.5f))+1][(int) Math.floor(getNextY(deltaTime)+1.1f)] == Tile.WALL ||
-                        tiles[((getNextX(deltaTime)*2) % 1 == 0 ? (int) (getNextX(deltaTime)+1.0f) : (int) (getNextX(deltaTime)+0.5f))+1][(int) Math.floor(getNextY(deltaTime)+1.9f)] == Tile.WALL;
-
-        boolean collider3 = false;//TODO
-
-        boolean onChain =
-                tiles[(int) (getNextX(deltaTime) + 1.0f)][getNextY(deltaTime) % 1 == 0 ? (int) Math.floor(getNextY(deltaTime)) : (int) Math.floor(getNextY(deltaTime)+1)] == Tile.CHAIN &&
-                        Math.abs((getNextX(deltaTime) - 1) - (float) Math.floor(getNextX(deltaTime)) + 0.5f) < 0.05f;
-
-        colliders[0] = collider0;
-        colliders[1] = collider1;
-        colliders[2] = collider2;
-        colliders[3] = collider3;
-        onChain(onChain);
     }
 
     public void onChain(boolean isOnChain) {

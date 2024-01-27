@@ -8,14 +8,11 @@ import java.util.Random;
 
 public class Splash extends Template {
     private final Random random;
-//    private final Sound sound;
 
     public Splash() {
         super(true, true);
         random = new Random();
         setFading(true);
-//        sound = Gdx.audio.newSound(Gdx.files.internal("splash.mp3"));
-//        sound.play();
     }
 
     @Override

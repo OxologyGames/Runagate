@@ -11,20 +11,20 @@ public abstract class BaseBlock implements Serializable {
     private final float density;
     private final float friction;
 
-    public BaseBlock(float x, float y, float density, float friction) {
+    protected BaseBlock(float x, float y, float density, float friction) {
         this.x = x;
         this.y = y;
         this.density = density;
         this.friction = friction;
     }
 
-    void createBlock(World world) {
+    public void createBlock(World world) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set(x + 16, y + 16);
+        bodyDef.position.set(x + 0.5f, y + 0.5f);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(16, 16);
+        shape.setAsBox(0.5f, 0.5f);
 
         FixtureDef fixture = new FixtureDef();
         fixture.shape = shape;
