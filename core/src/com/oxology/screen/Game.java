@@ -1,5 +1,6 @@
 package com.oxology.screen;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.oxology.world.Level;
@@ -13,12 +14,18 @@ public class Game extends Template {
 
     private Box2DDebugRenderer debugRenderer;
 
+    private OrthographicCamera debugCamera;
+
     //TODO
     private Texture wall;
     private Texture chain;
 
     public Game(List<Level> levels) {
         super();
+
+        debugCamera = new OrthographicCamera(80, 45);
+        debugCamera.translate(40, 22.5f);
+        debugCamera.update();
 
         debugRenderer = new Box2DDebugRenderer();
 
@@ -48,7 +55,7 @@ public class Game extends Template {
         levels.get(0).getPlayer().draw(batch);
         batch.end();
 
-        levels.get(0).draw(camera, debugRenderer);
+        levels.get(0).draw(debugCamera, debugRenderer);
     }
 
     public void update(float deltaTime) {

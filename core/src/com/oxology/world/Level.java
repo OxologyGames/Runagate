@@ -52,7 +52,7 @@ public class Level implements Serializable {
         for(int i = 0; i < 80; i++) {
             for(int j = 0; j < 45; j++) {
                 if(tiles[i][j] == Tile.WALL) {
-                    generatePlatform(i * 32, j * 32);
+                    generatePlatform(i, j);
                 }
             }
         }
@@ -63,17 +63,17 @@ public class Level implements Serializable {
     private void createPlayer() {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(3*32+16, 5*32+16);
+        bodyDef.position.set(3+16, 5+16);
 
         playerBody = world.createBody(bodyDef);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(32, 48);
+        shape.setAsBox(1, 2);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 2.0f;
-        fixtureDef.friction = 5.0f;
+        fixtureDef.density = 1.0f;
+        fixtureDef.friction = 0.05f;
 
         playerBody.createFixture(fixtureDef);
         playerBody.setFixedRotation(true);
@@ -84,12 +84,12 @@ public class Level implements Serializable {
     private void generatePlatform(int x, int y) {
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.set(x + 16, y + 16);
+        bodyDef.position.set(x + 0.5f, y + 0.5f);
 
         Body body = world.createBody(bodyDef);
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(16, 16);
+        shape.setAsBox(0.5f, 0.5f);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
@@ -156,7 +156,7 @@ public class Level implements Serializable {
         player.update(deltaTime);
         player.checkForCollisions(deltaTime, this);
         world.step(deltaTime, 6, 2);
-        float force = 10000000.0f;
+        float force = 100.0f;
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             playerBody.applyForceToCenter(new Vector2(-force, 0), false);
@@ -178,5 +178,9 @@ public class Level implements Serializable {
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public World getWorld() {
+        return world;
     }
 }
