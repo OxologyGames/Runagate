@@ -13,14 +13,14 @@ import com.oxology.world.Level;
 import com.oxology.world.block.BrickBlock;
 
 public class LevelEditor extends Template {
-    private Level level;
+    private final Level level;
 
     private Texture wallTexture;
     private int cursorX, cursorY;
 
-    private Panel panel;
-    private Toggle toggle;
-    private Button modeBtn;
+    private final Panel panel;
+    private final Toggle toggle;
+    private final Button modeBtn;
 
     private boolean editFreeze;
     private boolean grid;
@@ -30,7 +30,7 @@ public class LevelEditor extends Template {
     // 1 - Air
     // 2 - Chain
 
-    private WorldEditor worldEditorScreen;
+    private final WorldEditor worldEditorScreen;
 
     public LevelEditor(WorldEditor worldEditorScreen, Level level) {
         super();

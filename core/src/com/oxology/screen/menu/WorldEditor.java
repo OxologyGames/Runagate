@@ -60,12 +60,12 @@ public class WorldEditor extends Template {
         batch.draw(Runagate.getInstance().getAssetManager().pixelGray, 330, 40, 2190, 1360);
         batch.draw(Runagate.getInstance().getAssetManager().worldMesh, 330, 40, 2190, 1360);
         if(getLevel(cursorX, cursorY) == null && mode == 0)
-            batch.draw(Runagate.getInstance().getAssetManager().levelAdd, ((2520-330)/2)+138+cursorX*384, ((1360-40)/2)-26+cursorY*216);
+            batch.draw(Runagate.getInstance().getAssetManager().levelAdd, ((2520-330)/2f)+138+cursorX*384, ((1360-40)/2f)-26+cursorY*216);
         else if(getLevel(cursorX, cursorY) != null && mode == 1)
-            batch.draw(Runagate.getInstance().getAssetManager().levelDelete, ((2520-330)/2)+138+cursorX*384, ((1360-40)/2)-26+cursorY*216);
+            batch.draw(Runagate.getInstance().getAssetManager().levelDelete, ((2520-330)/2f)+138+cursorX*384, ((1360-40)/2f)-26+cursorY*216);
 
         for(Level level : world.getLevels()) {
-            batch.draw(level.getSnippet(), ((2520-330)/2)+138+level.getX()*384, ((1360-40)/2)-26+level.getY()*216, 384, 216, 0, 0, 1, 1);
+            batch.draw(level.getSnippet(), ((2520-330)/2f)+138+level.getX()*384, ((1360-40)/2f)-26+level.getY()*216, 384, 216, 0, 0, 1, 1);
         }
         saveBtn.draw(batch);
         backBtn.draw(batch);
