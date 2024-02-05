@@ -24,7 +24,7 @@ public abstract class Template implements Screen {
     private boolean fadeOut;
 
     public Template() {
-        updateViewport(Runagate.getInstance().getResX(), Runagate.getInstance().getResY());
+        updateViewport(Runagate.MENU_WIDTH, Runagate.MENU_HEIGHT);
         batch = new SpriteBatch();
     }
 

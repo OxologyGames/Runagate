@@ -2,7 +2,6 @@ package com.oxology;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.oxology.Runagate;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -76,8 +75,6 @@ public class DesktopLauncher {
 
 		if((boolean) values.get("fullscreen")) config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 		else config.setMaximized(true);
-
-		System.out.println(values.values());
 
 		Runagate.setInstance(new Runagate(values));
 		new Lwjgl3Application(Runagate.getInstance(), config);

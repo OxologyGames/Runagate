@@ -1,7 +1,6 @@
 package com.oxology.screen.menu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.oxology.Runagate;
 import com.oxology.ui.Button;
@@ -16,12 +15,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class LevelSelector extends Template {
-    private OrthographicCamera camera;
-    private List<UUID> worlds;
-    private BitmapFont font;
-    private Button playBtn;
-    private Button backBtn;
-    private Button newBtn;
+    private final List<UUID> worlds;
+    private final BitmapFont font;
+
+    private final Button playBtn;
+    private final Button backBtn;
+    private final Button newBtn;
+
     private int index;
     private File worldsFolder;
     private boolean toPlay;
@@ -30,10 +30,6 @@ public class LevelSelector extends Template {
         super();
 
         this.toPlay = toPlay;
-
-        this.camera = new OrthographicCamera(Runagate.MENU_WIDTH, Runagate.MENU_HEIGHT);
-        this.camera.translate(Runagate.MENU_WIDTH/2f, Runagate.MENU_HEIGHT/2f);
-        this.camera.update();
 
         this.worlds = new ArrayList<>();
         File gameDataFolder = new File(System.getenv("APPDATA"), "Runagate");
@@ -79,8 +75,8 @@ public class LevelSelector extends Template {
     }
 
     public void update(float deltaTime) {
-        batch.setProjectionMatrix(this.camera.combined);
-        this.camera.update();
+        batch.setProjectionMatrix(camera.combined);
+        camera.update();
 
         if(getX() > 330) {
             index = Math.min((1410 - (getY()-50))/60, worlds.size());

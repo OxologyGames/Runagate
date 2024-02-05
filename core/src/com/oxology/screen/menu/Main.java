@@ -1,7 +1,6 @@
 package com.oxology.screen.menu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.oxology.Runagate;
 import com.oxology.ui.Button;
@@ -14,14 +13,8 @@ public class Main extends Template {
 
     private final BitmapFont version;
 
-    private final OrthographicCamera menuCamera;
-
     public Main() {
         super(true, true);
-
-        menuCamera = new OrthographicCamera(Runagate.MENU_WIDTH, Runagate.MENU_HEIGHT);
-        menuCamera.translate(Runagate.MENU_WIDTH/2f, Runagate.MENU_HEIGHT/2f);
-        menuCamera.update();
 
         version = Runagate.getInstance().getAssetManager().getBitmapFont(24, 6);
         version.setColor(1, 1, 1, 1);
@@ -53,8 +46,8 @@ public class Main extends Template {
     public void update(float delta) {
         super.update(delta);
 
-        menuCamera.update();
-        batch.setProjectionMatrix(menuCamera.combined);
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
 
         playBtn.update(delta);
         worldBtn.update(delta);

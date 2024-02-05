@@ -74,6 +74,9 @@ public class WorldEditor extends Template {
     }
 
     public void update(float deltaTime) {
+        batch.setProjectionMatrix(camera.combined);
+        camera.update();
+
         if(getX() > 330 && getX() < 2520 && getY() > 40 && getY() < 1400) {
             int mouseX = (getX()-(2520-330)/2)-138;
             cursorX = (mouseX < 0 ? mouseX-384 : mouseX)/384;

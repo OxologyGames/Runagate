@@ -85,6 +85,9 @@ public class LevelEditor extends Template {
     }
 
     public void update(float deltaTime) {
+        batch.setProjectionMatrix(camera.combined);
+        camera.update();
+
         if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                 saveLevel();
