@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.oxology.Runagate;
 import com.oxology.ui.Button;
+import com.oxology.ui.ModalPanel;
 import com.oxology.ui.Panel;
 import com.oxology.ui.Toggle;
 import com.oxology.screen.Template;
@@ -19,6 +20,7 @@ public class LevelEditor extends Template {
     private int cursorX, cursorY;
 
     private final Panel panel;
+    private final ModalPanel modalPanel;
     private final Toggle toggle;
     private final Button modeBtn;
 
@@ -48,13 +50,18 @@ public class LevelEditor extends Template {
 
         BitmapFont font = Runagate.getInstance().getAssetManager().getBitmapFont(48, 12);
         font.setColor(0, 0, 0, 1);
+
         Button saveBtn = new Button(40, 1350, 250, 50, "SAVE", font, this::saveLevel);
         Button backBtn = new Button(40, 1290, 250, 50, "BACK", font, this::backToWorld);
         modeBtn = new Button(40, 1230, 250, 50, "WALL", font, this::changeMode);
+        Button themeBtn = new Button(40, 1170, 250, 50, "THEME", font, this::changeTheme);
 
         this.panel.addElement(saveBtn);
         this.panel.addElement(backBtn);
         this.panel.addElement(modeBtn);
+        this.panel.addElement(themeBtn);
+
+        this.modalPanel = new ModalPanel(1200, 300, 600);
 
         this.toggle = new Toggle(2560-128, 64, this::togglePanel);
 
@@ -114,6 +121,7 @@ public class LevelEditor extends Template {
         cursorY = Math.min(getY()/32, 44);
 
         panel.update(deltaTime);
+        modalPanel.update(deltaTime);
 
         toggle.update(deltaTime);
 
@@ -152,6 +160,10 @@ public class LevelEditor extends Template {
 
         Button button = (Button) panel.getElement(modeBtn);
         button.setText(text);
+    }
+
+    private void changeTheme() {
+        modalPanel.setState(modalPanel.getState() == Panel.SHOWED ? Panel.HIDDEN : Panel.SHOWED);
     }
 
     private void togglePanel() {

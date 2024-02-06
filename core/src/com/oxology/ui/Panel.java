@@ -8,17 +8,17 @@ import java.util.List;
 public class Panel extends UIElement {
     private static final float MAX_SPEED = 600;
 
-    private static final int HIDDEN = 0;
+    public static final int HIDDEN = 0;
     private static final int HIDING = 1;
     private static final int SHOWING = 2;
-    private static final int SHOWED = 3;
+    public static final int SHOWED = 3;
 
     private final List<UIElement> elements;
     private final List<Float> elementX;
     private final float initialX;
     private final float width;
 
-    private int state;
+    protected int state;
     private float speed;
 
     public Panel(float x, float y, float width) {
@@ -110,5 +110,9 @@ public class Panel extends UIElement {
         }
 
         speed = 0;
+    }
+
+    public int getState() {
+        return state;
     }
 }
